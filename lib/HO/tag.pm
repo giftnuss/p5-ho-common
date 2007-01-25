@@ -1,7 +1,5 @@
-
+  package HO::tag
 ; use strict; use warnings
-
-; package HO::tag
 ; use base 'HO::attr'
 
 ; our $VERSION = 0.029
