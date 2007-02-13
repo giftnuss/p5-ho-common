@@ -19,7 +19,7 @@
 ; sub _attributes
     { $_[0]->[ATTRIBUTES] }
 
-; sub AUTOLOAD
+; sub AUTOLOAD : lvalue
     { my $self=shift
     ; our $AUTOLOAD
     ; croak "AUTOLOAD ($AUTOLOAD) called without object." unless ref $self
@@ -40,7 +40,7 @@
     ; $self
     }
 
-; sub get_attribute
+; sub get_attribute : lvalue
     { my ($self,$key)=@_
     ; $self->_attributes->{$key}
     }
