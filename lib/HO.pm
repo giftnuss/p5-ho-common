@@ -1,10 +1,7 @@
-
-; use strict; use warnings; no warnings "void"
-
-; package HO
-
-; use Carp
-;;
+  package HO
+# ==========
+; use strict; our $VERSION='0.06';
+# ================================
 
 =head1 NAME
 
@@ -12,27 +9,27 @@ HO - Hierarchical Objects
 
 =head1 VERSION
 
-Version 0.059
+Version 0.06
 
   $Id: HO.pm,v 1.1 2006/11/24 16:41:00 dirk Exp $
 
 =cut
 
-; our $VERSION = 0.059
+# TODO: needs testing
 ; require 5.005
 ;;
 
 =head1 SYNOPSIS
 
- use HO;
- no warnings 'void';
+   use HO;
+   no warnings 'void';
 
- my $obj=HO('text',$other_object);
+   my $obj=new HO('text',$other_object);
  
- $obj->insert('more text');
- $obj << $another_object ** 'anymore text';
+   $obj->insert('more text');
+   $obj << $another_object ** 'anymore text';
  
- print "$obj";
+   print "$obj";
 
 =head1 DESCRIPTION
 
@@ -46,38 +43,34 @@ But this is mine and I hope other programmer found it useful and use it too.
 
 I'm open for any suggestions and each form of constructive criticism. This
 modul was build after a long evolutionary process. First time it grows, than
-it was split, names becomes shorter and finally it was split into a class hierarchy.
+it was split, names becomes shorter and finally it was splited into a class 
+hierarchy. Last feature was the dynamic constructor to solve the problem 
+when different sublasses uses the same index for an object property.  
 
 =head2 WARNING
 
 If an object is inserted somewhere inside of hisself an endless
 loop will be the result of the string method. In the future another class
 maybe C<HO::Safe> will targeting this issue.
-   
+
+=head2 new and init
+
+The constructor C<new> is created by the L<HO::accessor> module. 
+This constructor calls the init method. so you have to overwrite
+this in your subclasses and never the constructor. If you do so, almost
+all other methods must be overwritten too.
+
+As argument is everthing allowed what can be stringified. Additional
+an arrayref in the arguments list is dereferenced and the content is 
+used as arguments too.
+
 =cut
 
-; use constant THREAD => 0
-;;
+; use HO::accessor [ __thread => '@' ]
 
-=head2 new / HO
-
-The classical constructor C<new> and a subroutine whith class as name 
-companion which could be imported in your namespace build a object.
-As argument is everthing allowed what can be stringified. Addotional
-an arrayref is dereferenced and the content is used as arguments
-
-=cut
-
-; sub new
-    { my $class = shift
-       ; $class = ref($class) if ref($class)
-    ; my $self  = [ [] ]
-    ; bless $self, $class
-    ; $self->insert( @_ )
-    }
-
-; sub HO { new HO ( @_ ) }
-;;
+; sub init
+    { shift->insert( @_ ) }
+;
 
 =head2 Protected Accessor
 
@@ -87,10 +80,21 @@ Protected in the sense of c++. Only subclasses should use it.
 
 =cut
 
-; sub _thread : lvalue { $_[0]->[THREAD] }
-;;
-        
+; sub _thread : lvalue { $_[0]->[&__thread] } ;
+
+=cut
+
 =head1 Public Interface
+
+=head2 replace
+
+=cut
+
+; sub replace
+    { my $self = shift
+    ; @{$self->_thread}=()
+    ; $self->insert(@_)
+    }
 
 =head2 insert or << or **
 
@@ -151,7 +155,7 @@ Make a string from the object.
     }
 ;;
 
-=head2 copy
+=head2 copy or * operator
 
 This makes no deep copy. Please use Clonable for this task.
 May have a number as argument and makes so many copies of the
@@ -161,8 +165,9 @@ an arrayref.
 =cut
 
 ; sub copy
-    { my ($obj,$arg)=@_
-    ; my $num = defined($arg) && ($arg > 1) ? $arg : 1
+    { my ($obj,$arg,$reverse)=@_
+    ; ($obj,$arg)=($arg,$obj) if $reverse
+    ; my $num = defined($arg) && ($arg > 1) ? int($arg) : 1
     ; my @copy
     ; for ( 1..$num )
         { my $copy=$obj->new()
@@ -171,18 +176,17 @@ an arrayref.
         }
     ; wantarray ? @copy : defined($arg) ? \@copy : $copy[0] 
     }
-;;
+;
 
-=head2 multiply or * operator
+=head2 count
+
+Simply returns the number of child elements in the first level.
 
 =cut
 
-; sub multiply
-    { my ($o,$num)=@_
-    ; return new HO($o->copy($num))
-    }
-;;
-  
+; sub count
+   { scalar @{$_[0]->_thread} }
+
 =head1 NOTES
 
 =head2 operator <<
@@ -190,7 +194,7 @@ an arrayref.
 	$obj << $other_obj; # or
 	$obj << \@array;    # because a plain Array doesn't work with operator
 
-This makes the code more like c++. Funny Thing, which works fine. Only the warning
+This makes the code more like c++. Funny thing, which works fine. Only the warning
 is bad, which is produced because the void context. This is could be disabled with:
   
   no warnings 'void'
@@ -208,11 +212,10 @@ An object in boolean context is always true.
     '**'     => "insert",
     '""'     => "string",
     '+'      => "concat",
-    '*'      => "multiply",
+    '*'      => "copy",
     'bool'   => sub{ 1 },
     fallback => 1,
-    nomethod => sub { croak "illegal operator $_[3] in ".join(" ",caller(2) ) }
-
+    nomethod => sub { die "illegal operator $_[3] in ".join(" ",caller(2) ) }
   
 ; 1
 

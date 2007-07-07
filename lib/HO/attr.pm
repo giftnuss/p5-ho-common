@@ -1,23 +1,19 @@
-
-; use strict; use warnings
-
-; package HO::attr
-; use HO
+  package HO::attr
+# ****************
 ; use base 'HO'
-
+; our $VERSION=$HO::VERSION
+# *************************
 ; use Carp
-
 ; use constant ATTRIBUTES => 1
 
 ; sub new 
     { my ($self,@args)=@_
     ; $self=$self->SUPER::new(@args)
-    ; $self->[ATTRIBUTES] = {}
+    ; $self->_attributes = {}
     ; $self
     }
 
-; sub _attributes
-    { $_[0]->[ATTRIBUTES] }
+; sub _attributes { $_[0]->[ATTRIBUTES] }
 
 ; sub AUTOLOAD : lvalue
     { my $self=shift
