@@ -16,7 +16,7 @@ Version 0.06
 =cut
 
 # TODO: needs testing
-; require 5.005
+; require 5.006
 ;;
 
 =head1 SYNOPSIS
@@ -47,6 +47,9 @@ it was split, names becomes shorter and finally it was splited into a class
 hierarchy. Last feature was the dynamic constructor to solve the problem 
 when different sublasses uses the same index for an object property.  
 
+Some mothods are changeable on an object. This function is provided by the 
+HO::class package.
+
 =head2 WARNING
 
 If an object is inserted somewhere inside of hisself an endless
@@ -64,9 +67,23 @@ As argument is everthing allowed what can be stringified. Additional
 an arrayref in the arguments list is dereferenced and the content is 
 used as arguments too.
 
+=head2 insert or << or **
+
+With this method or operators the content is inserted.
+
 =cut
 
-; use HO::accessor [ __thread => '@' ]
+; use subs qw/init/
+
+; use HO::class
+
+    accessor => __thread => '@',
+
+    method   => insert   => sub
+       { my $self = shift
+       ; push @{$self->_thread}, map { ref eq 'ARRAY' ? new HO(@$_) : $_ } @_
+       ; $self
+       }
 
 ; sub init
     { shift->insert( @_ ) }
@@ -82,8 +99,6 @@ Protected in the sense of c++. Only subclasses should use it.
 
 ; sub _thread : lvalue { $_[0]->[&__thread] } ;
 
-=cut
-
 =head1 Public Interface
 
 =head2 replace
@@ -96,18 +111,6 @@ Protected in the sense of c++. Only subclasses should use it.
     ; $self->insert(@_)
     }
 
-=head2 insert or << or **
-
-With this method or operators the content is inserted.
-
-=cut
-
-; sub insert
-    { my $self = shift
-    ; push @{$self->_thread}, map { ref eq 'ARRAY' ? new HO(@$_) : $_ } @_
-    ; $self
-    }
-;;
 
 =head2 splice
 

@@ -11,10 +11,12 @@
   
 ; our %type = ('@'=>sub{[]},'%'=>sub{{}},'$'=>sub{undef})
 
+; our $class
+
 ; sub import
     { my ($package,$ac) = (@_,[])
-    ; my $caller = caller
-  
+    ; my $caller = $HO::accessor::class || caller
+   
     ; die "HO::accessor::import already called for class $caller."
         if $classes{$caller}
 
@@ -24,13 +26,12 @@
     ; my @constructor  
 
     ; foreach my $class (@build)
-        { next unless $classes{$class}
-	; my @acc=@{$classes{$class}}
+        { my @acc=@{$classes{$class}} or next
 	; while (@acc)
 	    { my ($accessor,$type)=splice(@acc,0,2)
 	    ; my $proto=$type{$type}
 	    ; unless(ref $proto eq 'CODE')
-		{ warn "Unknown property type '$type', caller is $caller."
+		{ warn "Unknown property type '$type', in setup for class $caller."
 		; $proto=sub{undef}
 		}
 	    ; if($accessors{$accessor})
@@ -45,11 +46,17 @@
 	    }
 	}
     ; { no strict 'refs'
-      ; *{"${caller}::new"}=sub
-	  { my ($self,@args)=@_
-	  ; bless([map {ref $_ ? $_->() : $_} @constructor], $caller)
-	      ->init(@args)
-	  }
+      ; *{"${caller}::new"}=
+          $caller->can('init') ?
+            sub
+	      { my ($self,@args)=@_
+	      ; bless([map {ref $_ ? $_->() : $_} @constructor], ref $self || $self)
+	          ->init(@args)
+	      }
+          : sub
+              { my ($self,@args)=@_
+              ; bless([map {ref $_ ? $_->() : $_} @constructor], ref $self || $self)
+              }
       ; my %acc=@{$classes{$caller}}
       ; foreach (keys %acc)
           { *{"${caller}::${_}"}=$accessors{$_}
@@ -60,6 +67,11 @@
 ; sub accessors_for_class
     { my ($self,$class)=@_
     ; $classes{$class}
+    }
+
+; sub _value_of
+    { my ($self,$an)=@_
+    ; $accessors{$an}->()
     }
 
 ; 1
@@ -79,6 +91,16 @@ HO::accessor
 
 =head1 DESCRIPTION
 
+deprecated
+
+=head1 SEE ALSO
+
+L<Class::ArrayObjects> by Robin Berjon (RBERJON)
+
+L<Class::BuildMethods> by Ovid -- add inside out data stores to a class.
 
 
-  
+
+
+
+
