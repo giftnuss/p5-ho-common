@@ -49,9 +49,24 @@
       }
     }
 
-; sub method
-
-; sub constructor
+; sub make_subclass
+  { my %args = @_
+  ; $args{'of'}   ||= [ "".caller(1) ]
+  ; $args{'name'} || return
+  ; $args{'in'}   ||= $args{'of'}->[0]
+  ; $args{'code'} ||= $args{'codegen'} ? $args{'codegen'}->(%args) : ''
+  # optional shortcut_in
+      
+  ; my $code = 'package '.$args{'in'}.'::'.$args{'name'}.';'
+             . 'our @ISA = qw/'.join(' ',@{$args{'of'}}).'/;' . $args{'code'}
+      
+  ; if($args{'shortcut_in'})
+      { $code .= 'package '.$args{'shortcut_in'}.';'
+	       . 'sub '.$args{'name'}.' { new '.$args{'in'}.'::'.$args{'name'}.'(@_) }'
+      }
+  ; eval $code
+  ; die $@ if $@
+  }
 
 ; 1
 

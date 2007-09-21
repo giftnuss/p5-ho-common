@@ -7,26 +7,20 @@
 ; BEGIN
     { use_ok('HO::tag') }
     
-; my $a=new HO::tag('a')
-; is($a,'a','HO::Tag\'s output is like HO')
+; my $a=new HO::tag('p')
+; ok(!_is_single_tag $a ())
+; is($a,'<p></p>','simple double tag')
 
-; is($a->tag,'a','test tag method')
+; is($a->_tag,'p','test tag method')
+  
+; $a->_tag = 'b'
+; is($a->_tag,'b','change tag with this lvalue method')
 
-; $a->tag = 'b'
-; is($a->tag,'b','change tag with this lvalue method')
-
-; my $test
-; close STDERR
-; open(STDERR,">",\$test) or die "$!"
-; my $b=new HO::tag()
-; close STDERR
-
-; like($test,qr/missing argument tagname/,"check warning because missing argument")
-
-; $b->tag="a"
+; my $b=new HO::tag
+; $b->_tag="a"
 ; $b->insert("bc")
-; is($b,"abc","with some little content")
+; is($b,"<a>bc</a>","with some little content")
 
 ; $b->replace("cb")
-; is($b,"acb","content was replaced")
+; is($b,"<a>cb</a>","content was replaced")
 ;

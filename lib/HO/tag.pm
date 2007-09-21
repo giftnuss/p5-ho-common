@@ -1,10 +1,13 @@
   package HO::tag
-; use strict; use warnings
+# ***************
 ; use base 'HO::attr'
+; our $VERSION = $HO::VERSION
+# ***************************
+  
+; use HO::class
+    accessor => __is_single_tag => '$'
 
-; our $VERSION = 0.029
-
-; sub tag : lvalue
+; sub _tag : lvalue
     { $_[0]->_thread->[0] }
 
 ; sub _begin_tag    () { '<'   } # inline
@@ -12,28 +15,47 @@
 ; sub _close_stag   () { ' />' } # inline
 ; sub _begin_endtag () { '</'  } # inline
 
-; sub is_single_tag
-    { defined $_[0]->_thread->[1] }
-
-; sub string
-    { if( $_[0]->is_single_tag )
-        { return $_[0]->double_tag }
+; sub _is_single_tag : lvalue
+    { if( defined $_[1] )
+        { $_[0]->[&__is_single_tag] = $_[1] 
+	; return $_[0] 
+	}
       else
-        { return $_[0]->single_tag }
+	{ return $_[0]->[&__is_single_tag]
+	}
     }
 
-; sub single_tag
-    { $_[0]->_begin_tag . $_[0]->tag . $_[0]->attributes_string . $_[0]->_close_stag }
+; sub string
+    { if( $_[0]->_is_single_tag )
+        { return $_[0]->_single_tag }
+      else
+        { return $_[0]->_double_tag }
+    }
 
-; sub double_tag
+; sub _single_tag
+    { my ($tag,@thread)=$_[0]->content
+	  
+    ; my $r = $_[0]->_begin_tag . $_[0]->_tag . $_[0]->attributes_string . $_[0]->_close_stag
+	  
+    ;    $r .= ref($_) ? "$_" : $_ foreach @thread
+    ; return $r
+    }
+
+; sub _double_tag
     { my ($tag,@thread)=$_[0]->content
 
-    ; my $r = $_[0]->_begin_tag.$tag.$_[0]->attributes_string().$_[0]->_close_tag
+    ; my $r = $_[0]->_begin_tag . $_[0]->_tag . $_[0]->attributes_string() . $_[0]->_close_tag
 
     ; $r .= ref($_) ? "$_" : $_ foreach @thread
 
-    ; $r .= $_[0]->_begin_tag.$tag.$_[0]->_close_tag
+    ; $r .= $_[0]->_begin_endtag . $_[0]->_tag . $_[0]->_close_tag
     ; return $r
+    }
+
+# overwritten methods
+; sub replace
+    { my ($self,@args)  = @_
+    ; @{$_[0]->_thread} = ($_[0]->_tag,@args)
     }
 
 ; our %CATALOG

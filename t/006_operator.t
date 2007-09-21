@@ -6,34 +6,34 @@ no warnings 'void';
 use Test::More tests => 7;
 use HO::HTML;
 
-my $html=new Html;
-my $head=new Head;
-my $body=new Body;
-my $p   = new P;
-my $h   = new H(1);
+my $html=HO::HTML::Html;
+my $head=HO::HTML::Head;
+my $body=HO::HTML::Body;
+my $p   =HO::HTML::P;
+my $h   =HO::HTML::H(1);
 
 $html<<$head<<$body;
-is($html->get,'<html><head></head><body></body></html>');
+is("$html",'<html><head></head><body></body></html>');
 
 $body**$p**$h;
-is($body->get,'<body><p><h1></h1></p></body>');
+is("$body",'<body><p><h1></h1></p></body>');
 
 is("$h",'<h1></h1>');
 
-$h=new H(6);
-$p=new P;
-my $i=new Img;
+$h=HO::HTML::H(6);
+$p=HO::HTML::P;
+my $i=HO::HTML::Img;
 $h<<$p**$i;
 is("$h",'<h6><p><img /></p></h6>');
 
-$h=new H(3,'eins');
-$p=new P()<<'zwei';
+$h=HO::HTML::H(3,'eins');
+$p=HO::HTML::P()<<'zwei';
 is($h+$p."",'<h3>eins</h3><p>zwei</p>');
 
 is($h x 2,'<h3>eins</h3><h3>eins</h3>');
 
-$p=2*$h;
-is("$p",'<h3>eins</h3><h3>eins</h3>');
+$h=2*$h;
+is("@$h",'<h3>eins</h3> <h3>eins</h3>');
 
 
 

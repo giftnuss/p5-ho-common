@@ -1,6 +1,6 @@
 # -*- perl -*-
 
-# t/001_load.t - check module loading and create testing directory
+# t/005_overload.t - test overload with example HTML module
 
 use Test::More tests => 2;
 

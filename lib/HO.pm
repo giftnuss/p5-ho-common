@@ -169,7 +169,9 @@ an arrayref.
 
 ; sub copy
     { my ($obj,$arg,$reverse)=@_
-    ; ($obj,$arg)=($arg,$obj) if $reverse
+    # I misunderstand overload docs, the arguments are already in the right order here.
+    # note thate the * always creates an scalar context
+    #; ($obj,$arg)=($arg,$obj) if $reverse
     ; my $num = defined($arg) && ($arg > 1) ? int($arg) : 1
     ; my @copy
     ; for ( 1..$num )

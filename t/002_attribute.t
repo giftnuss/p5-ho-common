@@ -2,19 +2,20 @@
 
 # t/002_attribute.t - get and set attribute
 
-use Test::More tests => 7;
+use Test::More tests => 10;
 
 use HO::attr;
 
 my $h=new HO::attr;
 
 $h->set_attribute('undef1');
-ok(!defined $h->get_attribute('undef1'),"bool attribute set by API call");
-
+ok(!defined $h->get_attribute('undef1')  , "bool attribute set by API call");
+ok($h->has_attribute('undef1')           , "but attribute is set");
 
 $h->undef2;
-ok(!defined $h->get_attribute('undef2'),"bool attribute set by AUTOLOAD");
-
+ok(!defined $h->get_attribute('undef2')  , "bool attribute set by AUTOLOAD");
+ok($h->has_attribute('undef2')           , "attribute is also set");
+ok(!$h->has_attribute('notset')          , "but this is not set");
 
 $h->set_attribute('text1','');
 is($h->get_attribute('text1'),'',"attribute with empty value");

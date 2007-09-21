@@ -22,6 +22,3 @@ my $doubled = new HO($object->copy(2));
 is("$doubled","cbacba","simple multiply");
 
 ok($doubled->count==2,"count is 2");
-
-use Data::Dumper;
-print Dumper($doubled);
