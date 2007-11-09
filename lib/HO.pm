@@ -1,6 +1,6 @@
   package HO
 # ==========
-; use strict; our $VERSION='0.06';
+; use strict; our $VERSION='0.61';
 # ================================
 
 =head1 NAME
@@ -9,7 +9,7 @@ HO - Hierarchical Objects
 
 =head1 VERSION
 
-Version 0.06
+Version 0.61
 
   $Id: HO.pm,v 1.1 2006/11/24 16:41:00 dirk Exp $
 
@@ -54,7 +54,7 @@ HO::class package.
 
 If an object is inserted somewhere inside of hisself an endless
 loop will be the result of the string method. In the future another class
-maybe C<HO::Safe> will targeting this issue.
+maybe C<HO::safe> will targeting this issue.
 
 =head2 new and init
 
@@ -73,13 +73,14 @@ With this method or operators the content is inserted.
 
 =cut
 
+# this way HO::class knows that there is a init method
 ; use subs qw/init/
 
 ; use HO::class
 
-    accessor => __thread => '@',
+    _lvalue   => _thread => '@',
 
-    method   => insert   => sub
+    _method   => insert   => sub
        { my $self = shift
        ; push @{$self->_thread}, map { ref eq 'ARRAY' ? new HO(@$_) : $_ } @_
        ; $self
@@ -91,13 +92,12 @@ With this method or operators the content is inserted.
 
 =head2 Protected Accessor
 
-  _thread : lvalue - the content
+  _thread : lvalue
+
+This is the accessor to the array refererence which holds the content
+or if you want to call them so the cildren, of the particular object.
 
 Protected in the sense of c++. Only subclasses should use it.
-
-=cut
-
-; sub _thread : lvalue { $_[0]->[&__thread] } ;
 
 =head1 Public Interface
 

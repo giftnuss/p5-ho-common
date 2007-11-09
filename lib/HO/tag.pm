@@ -5,7 +5,7 @@
 # ***************************
   
 ; use HO::class
-    accessor => __is_single_tag => '$'
+    _index => __is_single_tag => '$'
 
 ; sub _tag : lvalue
     { $_[0]->_thread->[0] }

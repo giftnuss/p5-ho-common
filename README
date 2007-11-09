@@ -1,0 +1,25 @@
+
+HO stands for hierachical objects and is small object oriented
+library to setup to create easy write only objects. Write only
+means it is not so easy and not really supported by the api to
+modify the structure of the created objects once after there
+placement inside the hierarchy.
+
+Another drawback is that there is no builtin protection against
+endless loops when a object is placed somewhere inside of himself.
+
+One use case for this module anyway is the creation of template
+files where this does not matter. There are some utility packages
+HO::accessor and HO::class which may help to build up array
+based objects.
+
+This was a really long time project of mine, so that if the current
+state is finished it is good enough to see light of review and usage.
+Hope so.
+
+It is free like all code should be, so use it in any way you like,
+even ignoring it complete.
+
+Thank you perl people for all the uncounted hours of happy coding.
+
+Sebastian Knapp

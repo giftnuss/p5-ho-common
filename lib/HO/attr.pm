@@ -4,8 +4,7 @@
 ; our $VERSION=$HO::VERSION
 # *************************
 ; use strict
-
-; use Carp ()
+; require Carp 
   
 ; our ($AUTOLOAD)
   
@@ -17,9 +16,10 @@
   }
 
 ; use HO::class
-    accessor => __attributes => '%'
+    _index => __attributes => '%'
 
-; sub _attributes { $_[0]->[&__attributes] }
+; sub _attributes : lvalue
+    { $_[0]->[&__attributes] }
 
 ; sub AUTOLOAD : lvalue
     { my $self=shift
@@ -55,6 +55,12 @@
 ; sub bool_attribute
     { $_[0]->set_attribute($_[1],undef) }
 
+; sub rm_attribute
+    { delete $_[0]->_attributes->{$_[1]}
+    ; $_[0]
+    }
+ 
+
 ; sub set_attributes
     { my ($obj,%attr)=@_
     ; $obj->set_attribute($_,$attr{$_}) for keys %attr
@@ -77,3 +83,34 @@
 ; 1
 
 __END__
+
+=head1 HO::attr
+
+Extends the HO class with a attribute hash.
+
+=head1 SYNOPSIS
+
+  package My::Foo;
+  use base 'HO::attr';
+
+  my $foo=My::Foo->new;
+
+  $foo->set_attribute('id','xyz');
+  print $foo->get_attribute('id');
+
+  $foo->set_attributes(key => '1',value => 0);
+
+  # it implements simple accessors via AUTOLOAD
+  $foo->nerves = 'more than one';
+
+  # get the attributes as string
+  my $str=$foo->attributes_string
+  # something like 'id="xyz" nerves="more than one" key="1" value="0"'
+  # note that the order may vary  
+
+=head1 DESCRIPTION
+
+Adds a storage for key value pairs and the needed methods to manipulate
+and retrieve them to your class.
+
+ 

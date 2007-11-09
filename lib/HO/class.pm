@@ -12,21 +12,31 @@
     ; my $class = caller
     ; my @acc
     ; my @methods
+    ; my @lvalue
 
     ; while(@args)
         { my $action = lc(shift @args)
-        ; if($action eq 'method')
+        ; if($action eq '_method')
             { my ($name,$code) = splice(@args,0,2)
             ; push @acc, "_$name",'$'
             ; push @methods, $name, $code
             }
-          elsif($action eq 'accessor')
-            { push @acc, splice(@args,0,2)
-            ;
+          elsif($action eq '_index')
+            { my ($name,$type) = splice(@args,0,2)
+	    ; push @acc, $name, $type
             }
+	  elsif($action eq '_lvalue')
+	    { my ($name,$type) = splice(@args,0,2)
+	    ; push @acc, "_$name", $type
+	    ; push @lvalue, $name
+	    }
+	  # no actions => options
           elsif($action eq 'noconstructor')
             { $makeconstr = 0
             }
+	  elsif($action eq 'class')
+	    { $class = shift(@args)
+	    }
           else
             { die "Unknown action '$action' for $package."
             }
@@ -46,6 +56,13 @@
                                : $code->($self,@_)
                } 
           }
+      ; while(@lvalue)
+	  { my $name = shift(@lvalue)
+	  ; my $idx = _value_of HO::accessor "_$name"
+	  ; *{join('::',$class,$name)} = sub : lvalue
+	       { shift()->[$idx]
+	       }
+	  }
       }
     }
 
