@@ -1,7 +1,8 @@
   package HO
 # ==========
-; use strict; our $VERSION='0.61';
-# ================================
+; use strict
+; our $VERSION='0.61';
+# ====================
 
 =head1 NAME
 
@@ -12,12 +13,6 @@ HO - Hierarchical Objects
 Version 0.61
 
   $Id: HO.pm,v 1.1 2006/11/24 16:41:00 dirk Exp $
-
-=cut
-
-# TODO: needs testing
-; require 5.006
-;;
 
 =head1 SYNOPSIS
 

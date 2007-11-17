@@ -13,4 +13,4 @@
 
 ; use Test::More @args
 
-; Test::MinimumVersion::minimum_version_ok('lib/HO.pm', '5.005')
+; Test::MinimumVersion::minimum_version_ok('lib/HO.pm', '5.006')

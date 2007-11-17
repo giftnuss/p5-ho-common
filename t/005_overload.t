@@ -9,15 +9,15 @@ no warnings 'void';
 
 use HO::HTML;
 
-my $html = new Html();
-my $head = new Head();
-my $body = new Body();
+my $html = HO::HTML::Html();
+my $head = HO::HTML::Head();
+my $body = HO::HTML::Body();
 
 $html<<$head<<$body;
-is ($html->get,'<html><head></head><body></body></html>');
+is ($html,'<html><head></head><body></body></html>');
 
-my $para = new P();
-my $img  = new Img();
+my $para = HO::HTML::P();
+my $img  = HO::HTML::Img();
 $body<<($para<<$img);
-is ($body->get,'<body><p><img /></p></body>');
+is ($body,'<body><p><img /></p></body>');
 
