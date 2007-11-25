@@ -16,10 +16,7 @@
   }
 
 ; use HO::class
-    _index => __attributes => '%'
-
-; sub _attributes : lvalue
-    { $_[0]->[&__attributes] }
+    _lvalue => _attributes => '%'
 
 ; sub AUTOLOAD : lvalue
     { my $self=shift
@@ -32,8 +29,8 @@
         { $self->set_attribute($AUTOLOAD, @arg)
         ; return $self
         }
-      else
-        { return $self->get_attribute($AUTOLOAD) }
+    # don't say return, it is a lvalue sub
+    ; $self->get_attribute($AUTOLOAD)
     }
 
 ; sub set_attribute
@@ -73,9 +70,9 @@
     ; my %attr   = %{$self->_attributes}
     ; foreach ( keys %attr )
         { $v=$attr{$_}
-	; $r .= ref $v       ? sprintf(" %s=\"%s\"",$_,"$v") 
-	      : ! defined $v ? sprintf(" %s",$_)
-	      : sprintf(" %s=\"%s\"",$_,$v)
+	; $r .=  ref($v)     ? sprintf(" %s=\"%s\"",$_,"$v") 
+	      :  defined($v) ? sprintf(" %s=\"%s\"",$_,$v)
+              :                sprintf(" %s",$_)
         }
     ; return $r
     }

@@ -1,7 +1,10 @@
 # -*- perl -*-
 
-# t/001_load.t - check module loading and basic functionality
-
+###############################################################################
+# t/003_structure.t - check module loading and basic functionality
+###############################################################################
+use strict;
+use warnings;
 use Test::More tests => 7;
 
 BEGIN { use_ok( 'HO::structure' ); 
@@ -25,13 +28,4 @@ is("$structure","AB",'stringify works');
 
 
 __END__
-$object->insert("abc");
-is("$object","abc","simple insert and stringify");
 
-$object->replace("cba");
-is("$object","cba","simple replace");
-
-my $doubled = new HO($object->copy(2));
-is("$doubled","cbacba","simple multiply");
-
-ok($doubled->count==2,"count is 2");

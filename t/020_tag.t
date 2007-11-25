@@ -9,7 +9,7 @@
     
 ; my $a=new HO::tag('p')
 ; ok(!_is_single_tag $a ())
-; is($a,'<p></p>','simple double tag')
+; is("$a",'<p></p>','simple double tag')
 
 ; is($a->_tag,'p','test tag method')
   
@@ -19,8 +19,8 @@
 ; my $b=new HO::tag
 ; $b->_tag="a"
 ; $b->insert("bc")
-; is($b,"<a>bc</a>","with some little content")
+; is("$b","<a>bc</a>","with some little content")
 
 ; $b->replace("cb")
-; is($b,"<a>cb</a>","content was replaced")
+; is("$b","<a>cb</a>","content was replaced")
 ;

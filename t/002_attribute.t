@@ -2,7 +2,7 @@
 
 # t/002_attribute.t - get and set attribute
 
-use Test::More tests => 10;
+use Test::More tests => 17;
 
 use HO::attr;
 
@@ -31,4 +31,16 @@ $b=$h->set_attribute('text2');
 isa_ok($b,"HO","return value is an object");
 is_deeply($b,$h,"returning self");
 
+my $n=new HO::attr;
+$n->get_attribute("hallo") = "welt";
+ok($n->has_attribute('hallo'),"attr exists get_attribute lvalue");
+is($n->get_attribute('hallo'),'welt','attr set with lvalue get_attribute');
+is($n->attributes_string,' hallo="welt"','stringify 1');
+
+my $a=new HO::attr;
+$a->hallo = "welt";
+ok($a->has_attribute('hallo'),"attr exists with lvalue autoload");
+is($a->get_attribute('hallo'),'welt','attr set with lvalue autoload');
+is($a->hallo,"welt",'get attr via autoload');
+is($a->attributes_string,' hallo="welt"','stringify 2');
 

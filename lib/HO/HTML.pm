@@ -20,7 +20,7 @@
   }
   
 ; package HO::HTML::Double
-; use base 'HO::tag'
+; use base qw/HO::tag HO::insertpoint/
   
 ; our @TAGS = qw
   ( Html Head Title Body
@@ -30,7 +30,7 @@
     Blockquote Q
     Button Fieldset Form Label Legend Option Select Textarea 
   )
-  
+
 ; HO::HTML::_make_tags(tags => \@TAGS
     , codegen =>
         sub { my %args = @_
@@ -39,9 +39,9 @@
 	     .';$self->insert("'.lc($args{'name'}).'",@args)}'
 	    }
     )
-  
+
 ; package HO::HTML::Header
-; use base 'HO::tag'
+; use base qw/HO::tag HO::insertpoint/
 
 ; our @TAGS = qw(H)
 
@@ -57,7 +57,7 @@
     )
   
 ; package HO::HTML::Single
-; use base 'HO::tag'
+; use base qw/HO::tag HO::insertpoint/
   
 ; our @TAGS = qw(Br Hr Img Input)
 

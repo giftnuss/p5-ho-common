@@ -1,11 +1,18 @@
   package HO::insertpoint
 #************************
-; our $VERSION='0.01'
-#********************
+; require HO
+; require HO::accessor
+; our $VERSION=$HO::VERSION
+#**************************
 
-; use HO::class
-
-; HO::class::method 
+; sub insertpoint
+    { my ($self,$insertpoint) = @_
+    ; my $idx = _value_of HO::accessor "_insert"
+    ; $self->[$idx] = sub
+        { shift(); $insertpoint->insert(@_)
+        }
+    ; return $self
+    }
 
 ; 1
 
