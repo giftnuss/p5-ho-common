@@ -62,7 +62,7 @@ As argument is everthing allowed what can be stringified. Additional
 an arrayref in the arguments list is dereferenced and the content is 
 used as arguments too.
 
-=head2 insert or << or **
+=head2 insert, << or **
 
 With this method or operators the content is inserted.
 
@@ -96,14 +96,19 @@ Protected in the sense of c++. Only subclasses should use it.
 
 =head1 Public Interface
 
+
+
 =head2 replace
+
+In this base class the whole content array is deleted and the arguments are 
+used as new content.
 
 =cut
 
 ; sub replace
     { my $self = shift
     ; @{$self->_thread}=()
-    ; $self->insert(@_)
+    ; return $self->insert(@_)
     }
 
 
@@ -116,9 +121,11 @@ splice without first.
 
 ; sub splice
     { my $self = shift
-    ; CORE::splice(@{$self->_thread},@_)
+    ; my $offset = shift
+    ; my $length = shift
+    ; return CORE::splice(@{$self->_thread},$offset,$length,@_)
     }
-;;
+;
 
 =head2 string or "" operator
 
@@ -132,15 +139,17 @@ Make a string from the object.
     ; $r .= ref($_) ? "$_" : $_ foreach $self->content
     ; return $r
     }
-;;
+;
 
 =head2 content
+
+Returns the content of _thread as list.
 
 =cut
 
 ; sub content
     { @{$_[0]->_thread} }
-;;
+;
 
 =head2 concat or + operator
 
@@ -186,6 +195,7 @@ Simply returns the number of child elements in the first level.
 
 ; sub count
    { scalar @{$_[0]->_thread} }
+;
 
 =head1 NOTES
 
