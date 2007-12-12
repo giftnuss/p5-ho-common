@@ -4,6 +4,92 @@
 ; our $VERSION='0.61';
 # ====================
 
+# this way HO::class knows that there is a init method
+; use subs qw/init/
+
+; use HO::class
+
+    _lvalue   => _thread => '@',
+
+    _method   => insert   => sub
+       { my $self = shift
+       ; push @{$self->_thread}, map { ref eq 'ARRAY' ? new HO(@$_) : $_ } @_
+       ; $self
+       }
+
+
+; sub init
+    { shift->insert( @_ ) }
+
+
+; sub replace
+    { my $self = shift
+    ; @{$self->_thread}=()
+    ; return $self->insert(@_)
+    }
+
+
+; sub splice
+    { my $self = shift
+    ; my $offset = shift
+    ; my $length = shift
+    ; return CORE::splice(@{$self->_thread},$offset,$length,@_)
+    }
+
+
+; sub string
+    { my $self=shift
+    ; my $r   = ""
+    ; $r .= ref($_) ? "$_" : $_ foreach $self->content
+    ; return $r
+    }
+
+
+; sub content
+    { @{$_[0]->_thread} }
+
+
+; sub concat
+    { my ($o1,$o2,$reverse)=@_
+    ; ($o2,$o1)=($o1,$o2) if $reverse
+    ; new HO($o1,$o2)
+    }
+
+
+; sub copy
+    { my ($obj,$arg,$reverse)=@_
+    # I misunderstand overload docs, the arguments are already in the right order here.
+    # note thate the * always creates an scalar context
+    #; ($obj,$arg)=($arg,$obj) if $reverse
+    ; my $num = defined($arg) && ($arg > 1) ? int($arg) : 1
+    ; my @copy
+    ; for ( 1..$num )
+        { my $copy=$obj->new()
+        ; @{$copy->_thread} = @{$obj->_thread()}
+        ; push @copy,$copy
+        }
+    ; wantarray ? @copy : defined($arg) ? \@copy : $copy[0] 
+    }
+
+
+; sub count
+   { scalar @{$_[0]->_thread} }
+
+
+; use overload
+    '<<'     => "insert",
+    '**'     => "insert",
+    '""'     => "string",
+    '+'      => "concat",
+    '*'      => "copy",
+    'bool'   => sub{ 1 },
+    fallback => 1,
+    nomethod => sub { die "illegal operator $_[3] in ".join(" ",caller(2) ) }
+  
+; 1
+
+__END__
+
 =head1 NAME
 
 HO - Hierarchical Objects
@@ -12,7 +98,7 @@ HO - Hierarchical Objects
 
 Version 0.61
 
-  $Id: HO.pm,v 1.1 2006/11/24 16:41:00 dirk Exp $
+  $Id$
 
 =head1 SYNOPSIS
 
@@ -66,25 +152,6 @@ used as arguments too.
 
 With this method or operators the content is inserted.
 
-=cut
-
-# this way HO::class knows that there is a init method
-; use subs qw/init/
-
-; use HO::class
-
-    _lvalue   => _thread => '@',
-
-    _method   => insert   => sub
-       { my $self = shift
-       ; push @{$self->_thread}, map { ref eq 'ARRAY' ? new HO(@$_) : $_ } @_
-       ; $self
-       }
-
-; sub init
-    { shift->insert( @_ ) }
-;
-
 =head2 Protected Accessor
 
   _thread : lvalue
@@ -96,71 +163,25 @@ Protected in the sense of c++. Only subclasses should use it.
 
 =head1 Public Interface
 
-
-
 =head2 replace
 
 In this base class the whole content array is deleted and the arguments are 
 used as new content.
-
-=cut
-
-; sub replace
-    { my $self = shift
-    ; @{$self->_thread}=()
-    ; return $self->insert(@_)
-    }
-
 
 =head2 splice
 
 Apply CORE::splice on the content array. The arguments are the same as for
 splice without first.
 
-=cut
-
-; sub splice
-    { my $self = shift
-    ; my $offset = shift
-    ; my $length = shift
-    ; return CORE::splice(@{$self->_thread},$offset,$length,@_)
-    }
-;
-
 =head2 string or "" operator
 
 Make a string from the object.
-
-=cut
-
-; sub string
-    { my $self=shift
-    ; my $r   = ""
-    ; $r .= ref($_) ? "$_" : $_ foreach $self->content
-    ; return $r
-    }
-;
 
 =head2 content
 
 Returns the content of _thread as list.
 
-=cut
-
-; sub content
-    { @{$_[0]->_thread} }
-;
-
 =head2 concat or + operator
-
-=cut
-
-; sub concat
-    { my ($o1,$o2,$reverse)=@_
-    ; ($o2,$o1)=($o1,$o2) if $reverse
-    ; new HO($o1,$o2)
-    }
-;;
 
 =head2 copy or * operator
 
@@ -169,33 +190,9 @@ May have a number as argument and makes so many copies of the
 original. The return value is an array or in scalar context 
 an arrayref.
 
-=cut
-
-; sub copy
-    { my ($obj,$arg,$reverse)=@_
-    # I misunderstand overload docs, the arguments are already in the right order here.
-    # note thate the * always creates an scalar context
-    #; ($obj,$arg)=($arg,$obj) if $reverse
-    ; my $num = defined($arg) && ($arg > 1) ? int($arg) : 1
-    ; my @copy
-    ; for ( 1..$num )
-        { my $copy=$obj->new()
-        ; @{$copy->_thread} = @{$obj->_thread()}
-        ; push @copy,$copy
-        }
-    ; wantarray ? @copy : defined($arg) ? \@copy : $copy[0] 
-    }
-;
-
 =head2 count
 
 Simply returns the number of child elements in the first level.
-
-=cut
-
-; sub count
-   { scalar @{$_[0]->_thread} }
-;
 
 =head1 NOTES
 
@@ -214,22 +211,6 @@ and you have to do this for each file where this operator is used.
 =head2 operator bool
 
 An object in boolean context is always true.
-
-=cut
-
-; use overload
-    '<<'     => "insert",
-    '**'     => "insert",
-    '""'     => "string",
-    '+'      => "concat",
-    '*'      => "copy",
-    'bool'   => sub{ 1 },
-    fallback => 1,
-    nomethod => sub { die "illegal operator $_[3] in ".join(" ",caller(2) ) }
-  
-; 1
-
-__END__
 
 
 
