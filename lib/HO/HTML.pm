@@ -4,11 +4,31 @@
 # *******************
 
 ; require HO::class
+; require Exporter  
+
+; our @ISA = ('Exporter')
+; our @TAGS
+; our (@EXPORT_OK,@EXPORT)
+  
+; sub import
+  { my ($pkg,%args)=@_
+  ; if($args{'functional'})
+      { local @EXPORT
+      ; if(ref $args{'tags'} eq 'ARRAY')
+	  { @EXPORT = @{$args{'tags'}}
+	  }
+	else
+	  { @EXPORT = @TAGS
+	  }
+      ; __PACKAGE__->export_to_level(1,$pkg,@EXPORT)
+      }
+  }
 
 ; sub _make_tags
   { my $baseclass = caller(0)
   ; my %args = @_
   ; my @tags = @{$args{'tags'}}
+  ; push @TAGS,@tags
 	
   ; foreach my $tag (@tags)
       { HO::class::make_subclass
@@ -30,16 +50,27 @@
     Blockquote Q
     Button Fieldset Form Label Legend Option Select Textarea 
   )
+  
+; sub create_tags
+  { HO::HTML::_make_tags
+    ( tags    => $_[1]
+    , codegen => sub 
+        { my %args = @_; return sprintf <<'__PERL__'
+	      
+  sub init 
+      { my ($self,@args)=@_
+      ; $self->_is_single_tag(0)
+      ; $self->insert("%s",@args)
+      }
 
-; HO::HTML::_make_tags(tags => \@TAGS
-    , codegen =>
-        sub { my %args = @_
-	    ; 'sub init {my ($self,@args)=@_'
-	     .';$self->_is_single_tag(0)'
-	     .';$self->insert("'.lc($args{'name'}).'",@args)}'
-	    }
+__PERL__
+	, lc($args{'name'})
+	}
     )
+  }
 
+; __PACKAGE__->create_tags(\@TAGS)
+  
 ; package HO::HTML::Header
 ; use base qw/HO::tag HO::insertpoint/
 
