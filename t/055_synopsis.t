@@ -3,9 +3,34 @@
 # test the synopsis
 use strict;
 use warnings;
-no warnings 'void';
 
 use Test::More tests => 1;
+
+my $other_object = bless \my $str,'class::ok';
+$str = 'lol';
+my $another_object = bless \my $stg,'class::ok';
+
+{ package class::ok;
+  use overload '""' => sub { my $self=shift; $$self },
+               '**' => sub { my $self=shift; $$self = '_'. shift; }
+  #@class::ok::ISA = ('HO');
+};
+
+###########################################################################
+# Synopsis 2007 v0.61
+   use HO;
+   no warnings 'void';
+
+   my $obj=new HO('text',$other_object);
+ 
+   $obj->insert('more text');
+   $obj << $another_object ** 'anymore text';
+ 
+   is "$obj","textlolmore text_anymore text";
+   
+###########################################################################
+
+__END__
 
     package Hello::World::Structure;
     use base 'HO::Structure';

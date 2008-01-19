@@ -10,43 +10,74 @@
     { my ($package,@args)=@_
     ; my $makeconstr = 1
     ; my $class = caller
-    ; my @acc
-    ; my @methods
-    ; my @lvalue
+    ; my @acc         # all internal accessors
+    ; my @methods     # method changeable on a per object base
+    ; my @lvalue      # lvalue accessor
+    ; my @r_          # common accessors
 
     ; while(@args)
         { my $action = lc(shift @args)
-        ; if($action eq '_method')
-            { my ($name,$code) = splice(@args,0,2)
+        ; my ($name,$type,$code)
+        ;({ '_method' => sub
+            { ($name,$code) = splice(@args,0,2)
             ; push @acc, "_$name",'$'
             ; push @methods, $name, $code
             }
-          elsif($action eq '_index')
-            { my ($name,$type) = splice(@args,0,2)
-	    ; push @acc, $name, $type
+          , '_index' => sub
+            { ($name,$type) = splice(@args,0,2)
+            ; push @acc, $name, $type
             }
-	  elsif($action eq '_lvalue')
-	    { my ($name,$type) = splice(@args,0,2)
-	    ; push @acc, "_$name", $type
-	    ; push @lvalue, $name
-	    }
-	  # no actions => options
-          elsif($action eq 'noconstructor')
-            { $makeconstr = 0
+          , '_lvalue' => sub
+            { ($name,$type) = splice(@args,0,2)
+            ; push @acc, "_$name", $type
+            ; push @lvalue, $name
             }
-	  elsif($action eq 'class')
-	    { $class = shift(@args)
-	    }
-          else
-            { die "Unknown action '$action' for $package."
+          , '_rw' => sub
+            { ($name,$type) = splice(@args,0,2)
+            ; push @acc, "_$name", $type
+            ; if(lc($args[0]) eq 'abstract')
+                { shift @args
+                }
+              else
+                { push @r_, $name => sub
+                    { my $idx = _value_of HO::accessor "_$name"
+                    ; return HO::accessor::rw($name,$idx,$type)
+                    }
+                }
             }
-        }
+          , '_ro' => sub
+            { ($name,$type) = splice(@args,0,2)
+            ; push @acc, "_$name", $type
+            ; if(lc($args[0]) eq 'abstract')
+                { shift @args
+                }
+              else
+                { push @r_, $name => sub
+                    { my $idx = _value_of HO::accessor "_$name"
+                    ; return HO::accessor::ro($name,$idx,$type)
+                    }
+                }
+            }
+          # no actions => options
+          , 'noconstructor' => sub
+            { shift @args
+            , $makeconstr = 0
+            }
+          , ' alias' => sub
+            { 
+            }
+          , 'breakalias' => sub
+            { 
+            }
+          }->{$action}||sub { die "Unknown action '$action' for $package."
+                            })->()
+    }
     ; if($makeconstr)
         { local $HO::accessor::class = $class 
         ; import HO::accessor \@acc 
         }
 
-    ; { no strict 'refs'
+    ; { no strict 'refs'; local $_
       ; while(@methods)
           { my ($name,$code)=splice(@methods,0,2)
           ; my $idx = _value_of HO::accessor "_$name"
@@ -54,15 +85,18 @@
                { my $self = shift
                ; $self->[$idx] ? $self->[$idx]->($self,@_)
                                : $code->($self,@_)
-               } 
+               }
           }
       ; while(@lvalue)
-	  { my $name = shift(@lvalue)
-	  ; my $idx = _value_of HO::accessor "_$name"
-	  ; *{join('::',$class,$name)} = sub : lvalue
-	       { shift()->[$idx]
-	       }
-	  }
+          { my $name = shift(@lvalue)
+          ; my $idx = _value_of HO::accessor "_$name"
+          ; *{join('::',$class,$name)} = sub : lvalue
+	           { shift()->[$idx]
+	           }
+          }
+      ; while(my ($name,$subref)=splice(@r_,0,2))
+          { *{join('::',$class,$name)} = $subref->()
+          }
       }
     }
 
