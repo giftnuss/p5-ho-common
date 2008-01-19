@@ -11,6 +11,29 @@
 
 ; our %type = ('@'=>sub{[]},'%'=>sub{{}},'$'=>sub{undef})
 
+; our %ro_accessor =
+    ( '$' => sub { my ($n,$i) = @_ 
+                 ; return sub (){ shift()->[$i] } 
+                 }
+    , '@' => sub { my ($n,$i) = @_
+                 ; return sub { my ($obj,$idx) = @_
+                     ; $obj->[$i]->[$idx]
+                 }}
+    , '%' => sub { my ($n,$i) = @_
+                 ; return sub { my ($obj,$key) = @_
+                     ; $obj->[$i]->{$key}
+                 }}
+    )
+    
+; our %rw_accessor =
+    ( '$' => sub { my ($n,$i) = @_
+                 ; return sub { my ($obj,$val) = @_
+                     ; return $obj->[$i] unless defined $val
+                     ; $obj->[$i] = $val
+                     ; return $obj
+                 }}
+    )
+
 ; our $class
 
 ; sub import
@@ -72,6 +95,20 @@
 ; sub _value_of
     { my ($self,$an)=@_
     ; $accessors{$an}->()
+    }
+
+#########################
+# this functions defines
+# accessors
+#########################
+; sub ro
+    { my ($name,$idx,$type) = @_
+    ; return $ro_accessor{$type}->($name,$idx)
+    }
+    
+; sub rw
+    { my ($name,$idx,$type) = @_
+    ; return $rw_accessor{$type}->($name,$idx)
     }
 
 ; 1
