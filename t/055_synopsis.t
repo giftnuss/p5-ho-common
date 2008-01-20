@@ -4,7 +4,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 my $other_object = bless \my $str,'class::ok';
 $str = 'lol';
@@ -13,7 +13,6 @@ my $another_object = bless \my $stg,'class::ok';
 { package class::ok;
   use overload '""' => sub { my $self=shift; $$self },
                '**' => sub { my $self=shift; $$self = '_'. shift; }
-  #@class::ok::ISA = ('HO');
 };
 
 ###########################################################################
@@ -30,17 +29,21 @@ my $another_object = bless \my $stg,'class::ok';
    
 ###########################################################################
 
-__END__
-
     package Hello::World::Structure;
-    use base 'HO::Structure';
+    use base 'HO::structure';
+    
+    Test::More::ok(!@HO::structure::ISA,'empty ISA');
     
     use HO;
-    # $HO::DEBUG_AUTOLOAD=1;
+
     # basic structure using HO 
     
-    sub import
-        { shift()->slots(qw/hello world/) }
+    __PACKAGE__->auto_slots;
+    
+    { no strict 'refs'
+    ; no warnings 'once'
+    ; *get = \&HO::structure::string 
+    };
     
     sub new
         { my ($package,@p)=@_
@@ -64,8 +67,9 @@ __END__
     package main;
     
     # use Hello::World::Structure;
-    Hello::World::Structure->import;
     my $hw=Hello::World::Structure->new();
+    use Data::Dumper;
+    print Dumper($hw);
     
     # use slot to insert content into 'hello'
     $hw->hello('Hallo');

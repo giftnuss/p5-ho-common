@@ -42,7 +42,7 @@ HO::structure - something like an object template
     _lvalue => _areas => '%',
     _lvalue => _root  => '$'
 
-; sub set_area
+; sub set_area ($$$)
     { my ($obj,$key,$node) = @_
     ; if( exists $obj->_areas->{$key} )
         { croak "The area '$key' already exists."
@@ -55,6 +55,11 @@ HO::structure - something like an object template
         } 
     ; $obj->_areas->{$key} = $node
     ; return $obj
+    }
+
+; sub area_setter ($)
+    { my $obj = shift
+    ; return sub { $obj->set_area(@_); return $_[1] }
     }
 
 ; sub set_root
@@ -70,13 +75,18 @@ HO::structure - something like an object template
     { my ($self) = @_
     ; return "".$self->_root
     }
+    
+; sub fill ($$@)
+    { my ($obj,$key,@args) = @_
+    ; $obj->_areas->{$key}->insert(@args)
+    }
 
 #########################
 # Build time operations
 #########################
 ; sub auto_slots
     { my ($self,@args) = @_
-    ; my $obj = $self->new(@args)
+    ; my $obj = $self->new(@args); use Data::Dumper; print Dumper($obj)
     ; my @nodes = keys %{$self->_areas}
     ; $self->make_slots(@nodes)
     }

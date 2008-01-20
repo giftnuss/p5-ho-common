@@ -4,7 +4,7 @@
 
 use Test::More tests => 17;
 
-use HO::attr;
+BEGIN { use_ok('HO::attr') };
 
 my $h=new HO::attr;
 

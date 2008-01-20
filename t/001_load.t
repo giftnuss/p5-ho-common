@@ -6,7 +6,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 14;
 
 BEGIN { use_ok( 'HO' ); }
 
@@ -32,6 +32,12 @@ is(''.$doubled->splice(0,1,'gfe','jki'),'cba','splice result');
 is("$doubled",'gfejkicba','object after splice');
 
 ok( overload::Method($object,'""'),"stringify operator is overloaded");
+
+# restrict further development
+is_deeply(new HO::(),(bless [[],undef],'HO'));
+ok(new HO::()->__thread==0);
+ok(new HO::()->_insert==1);
+is_deeply(new HO::()->_thread,[]);
 
 
 

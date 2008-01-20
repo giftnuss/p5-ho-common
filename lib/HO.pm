@@ -12,7 +12,7 @@
     _lvalue   => _thread => '@',
 
     _method   => insert   => sub
-       { my $self = shift
+       { my $self = shift; use Data::Dumper; print Dumper($self)
        ; push @{$self->_thread}, map { ref eq 'ARRAY' ? new HO(@$_) : $_ } @_
        ; $self
        }

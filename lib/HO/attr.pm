@@ -6,32 +6,9 @@
 ; use strict
 ; require Carp 
   
-; our ($AUTOLOAD)
-  
-; DEFDEBUG:
-  { no strict 'refs'
-  ; unless( defined *HO::attr::DEBUG_AUTOLOAD{'CODE'} )
-      { sub DEBUG_AUTOLOAD () { 0 }
-      }
-  }
 
 ; use HO::class
     _lvalue => _attributes => '%'
-
-; sub AUTOLOAD : lvalue
-    { my $self=shift
-    ; Carp::croak "AUTOLOAD ($AUTOLOAD) called without object." 
-	  unless ref $self
-    ; Carp::carp "AUTOLOAD: ".$AUTOLOAD if DEBUG_AUTOLOAD
-    ; $AUTOLOAD =~ s/.*:://
-    ; my @arg=@_
-    ; if( @arg )
-        { $self->set_attribute($AUTOLOAD, @arg)
-        ; return $self
-        }
-    # don't say return, it is a lvalue sub
-    ; $self->get_attribute($AUTOLOAD)
-    }
 
 ; sub set_attribute
     { my ($self,$key,$value)=@_

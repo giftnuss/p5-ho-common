@@ -46,8 +46,9 @@
     ; $classes{$caller}=$ac
 
     ; my @build = reverse Class::ISA::self_and_super_path($caller)
-    ; my @constructor  
+    ; my @constructor
 
+    ; my $count=0
     ; foreach my $class (@build)
         { my @acc=@{$classes{$class}} or next
         ; while (@acc)
@@ -57,15 +58,16 @@
                 { warn "Unknown property type '$type', in setup for class $caller."
                 ; $proto=sub{undef}
                 }
-            ; if($accessors{$accessor})
-                { $constructor[$accessors{$accessor}->()]=$type{$type}
+            ; if($accessors{$class}{$accessor})
+                { $constructor[$accessors{$class}{$accessor}->()]=$type{$type}
                 }
               else
-                { my $val=scalar keys %accessors
+                { my $val=$count
                 ; my $acc=sub {$val}
-                ; $accessors{$accessor}=$acc
+                ; $accessors{$class}{$accessor}=$acc
                 ; $constructor[$acc->()]=$type{$type}
                 }
+            ; $count++
             }
         }
     ; { no strict 'refs'
@@ -73,28 +75,37 @@
           $caller->can('init') ?
             sub
               { my ($self,@args)=@_
-              ; bless([map {ref $_ ? $_->() : $_} @constructor], ref $self || $self)
+              ; bless([map {ref() ? $_->() : $_} @constructor], ref $self || $self)
                   ->init(@args)
               }
           : sub
               { my ($self,@args)=@_
-              ; bless([map {ref $_ ? $_->() : $_} @constructor], ref $self || $self)
+              ; bless([map {ref() ? $_->() : $_} @constructor], ref $self || $self)
               }
       ; my %acc=@{$classes{$caller}}
-      ; foreach (keys %acc)
-          { *{"${caller}::${_}"}=$accessors{$_}
+      ; foreach my $acc (keys %acc)
+          { *{"${caller}::${acc}"}=$accessors{$caller}{$acc}
           }
       }
     }
 
+# Package Method
 ; sub accessors_for_class
     { my ($self,$class)=@_
     ; $classes{$class}
     }
 
+# Package Function
 ; sub _value_of
-    { my ($self,$an)=@_
-    ; $accessors{$an}->()
+    { my ($class,$accessorname) = @_
+    ; my @classes = Class::ISA::self_and_super_path($class)
+    ; foreach my $c (@classes)
+        { if(defined($accessors{$c}{$accessorname}))
+            { #warn $accessorname.": ".$accessors{$c}{$accessorname}->()
+            ; return $accessors{$c}{$accessorname}->()
+            }
+        }
+    ; die "Accessor $accessorname is unknown for class $class."
     }
 
 #########################

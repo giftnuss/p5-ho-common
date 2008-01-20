@@ -40,7 +40,7 @@
                 }
               else
                 { push @r_, $name => sub
-                    { my $idx = _value_of HO::accessor "_$name"
+                    { my $idx = HO::accessor::_value_of($class,"_$name")
                     ; return HO::accessor::rw($name,$idx,$type)
                     }
                 }
@@ -53,15 +53,16 @@
                 }
               else
                 { push @r_, $name => sub
-                    { my $idx = _value_of HO::accessor "_$name"
+                    { my $idx = HO::accessor::_value_of($class,"_$name")
                     ; return HO::accessor::ro($name,$idx,$type)
                     }
                 }
             }
           # no actions => options
+          # all are unsupported until now
           , 'noconstructor' => sub
             { shift @args
-            , $makeconstr = 0
+            # $makeconstr = 0
             }
           , ' alias' => sub
             { 
@@ -74,13 +75,13 @@
     }
     ; if($makeconstr)
         { local $HO::accessor::class = $class 
-        ; import HO::accessor \@acc 
+        ; import HO::accessor:: \@acc 
         }
 
-    ; { no strict 'refs'; local $_
+    ; { no strict 'refs'
       ; while(@methods)
           { my ($name,$code)=splice(@methods,0,2)
-          ; my $idx = _value_of HO::accessor "_$name"
+          ; my $idx = HO::accessor::_value_of($class,"_$name")
           ; *{join('::',$class,$name)} = sub 
                { my $self = shift
                ; $self->[$idx] ? $self->[$idx]->($self,@_)
@@ -89,7 +90,7 @@
           }
       ; while(@lvalue)
           { my $name = shift(@lvalue)
-          ; my $idx = _value_of HO::accessor "_$name"
+          ; my $idx = HO::accessor::_value_of($class,"_$name")
           ; *{join('::',$class,$name)} = sub : lvalue
 	           { shift()->[$idx]
 	           }
