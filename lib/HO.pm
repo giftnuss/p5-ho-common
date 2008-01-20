@@ -12,14 +12,14 @@
     _lvalue   => _thread => '@',
 
     _method   => insert   => sub
-       { my $self = shift; use Data::Dumper; print Dumper($self)
+       { my $self = shift
        ; push @{$self->_thread}, map { ref eq 'ARRAY' ? new HO(@$_) : $_ } @_
        ; $self
        }
 
 
 ; sub init
-    { shift->insert( @_ ) }
+    { return shift->insert( @_ ) }
 
 
 ; sub replace
@@ -46,15 +46,14 @@
 
 
 ; sub content
-    { @{$_[0]->_thread} }
+    { return @{$_[0]->_thread} }
 
 
 ; sub concat
     { my ($o1,$o2,$reverse)=@_
     ; ($o2,$o1)=($o1,$o2) if $reverse
-    ; new HO($o1,$o2)
+    ; return new HO::($o1,$o2)
     }
-
 
 ; sub copy
     { my ($obj,$arg,$reverse)=@_
@@ -68,12 +67,12 @@
         ; @{$copy->_thread} = @{$obj->_thread()}
         ; push @copy,$copy
         }
-    ; wantarray ? @copy : defined($arg) ? \@copy : $copy[0] 
+    ; return wantarray ? @copy : defined($arg) ? \@copy : $copy[0] 
     }
 
 
 ; sub count
-   { scalar @{$_[0]->_thread} }
+   { return scalar @{$_[0]->_thread} }
 
 
 ; use overload
@@ -84,9 +83,12 @@
     '*'      => "copy",
     'bool'   => sub{ 1 },
     fallback => 1,
-    nomethod => sub { die "illegal operator $_[3] in ".join(" ",caller(2) ) }
+    nomethod => sub 
+        { require Carp
+        ; Carp::croak "illegal operator $_[3]." 
+        }
   
-; 1
+; 1 ;
 
 __END__
 

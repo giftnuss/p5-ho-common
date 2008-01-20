@@ -4,7 +4,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 my $other_object = bless \my $str,'class::ok';
 $str = 'lol';
@@ -68,8 +68,6 @@ my $another_object = bless \my $stg,'class::ok';
     
     # use Hello::World::Structure;
     my $hw=Hello::World::Structure->new();
-    use Data::Dumper;
-    print Dumper($hw);
     
     # use slot to insert content into 'hello'
     $hw->hello('Hallo');

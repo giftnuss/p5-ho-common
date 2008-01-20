@@ -7,7 +7,8 @@
 
 ; sub insertpoint
     { my ($self,$insertpoint) = @_
-    ; my $idx = _value_of HO::accessor "_insert"
+    ; my $class = ref($self) || $self
+    ; my $idx = HO::accessor::_value_of($class,"_insert")
     ; $self->[$idx] = sub
         { shift(); $insertpoint->insert(@_)
         }

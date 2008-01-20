@@ -79,6 +79,7 @@ HO::structure - something like an object template
 ; sub fill ($$@)
     { my ($obj,$key,@args) = @_
     ; $obj->_areas->{$key}->insert(@args)
+    ; return $obj
     }
 
 #########################
@@ -86,14 +87,14 @@ HO::structure - something like an object template
 #########################
 ; sub auto_slots
     { my ($self,@args) = @_
-    ; my $obj = $self->new(@args); use Data::Dumper; print Dumper($obj)
-    ; my @nodes = keys %{$self->_areas}
+    ; my $obj = $self->new(@args)
+    ; my @nodes = keys %{$obj->_areas}
     ; $self->make_slots(@nodes)
     }
 
 ; sub make_slots
     { my ($self,@nodes)=@_
-    ; my $class = ref $self || $self
+    ; my $class = ref($self) || $self
     ; my @result
     ; { no strict 'refs'
       ; foreach my $slot (@nodes)
@@ -101,7 +102,9 @@ HO::structure - something like an object template
               { carp "The class '${class}' has a method '${slot}', no slot defined."
               ; next
               }
-          ; *{"${class}::${slot}"} = sub {  shift()->fill("${slot}", @_ ) }
+          ; *{"${class}::${slot}"} = sub 
+              {  shift()->fill("${slot}", @_ ) 
+              }
           ; push @result,$slot
           }
       }

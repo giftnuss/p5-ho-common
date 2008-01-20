@@ -2,11 +2,11 @@
 
 # t/002_attribute.t - get and set attribute
 
-use Test::More tests => 17;
+use Test::More tests => 18;
 
-BEGIN { use_ok('HO::attr') };
+BEGIN { use_ok('HO::attr::autoload') };
 
-my $h=new HO::attr;
+my $h=new HO::attr::autoload;
 
 $h->set_attribute('undef1');
 ok(!defined $h->get_attribute('undef1')  , "bool attribute set by API call");
@@ -31,13 +31,13 @@ $b=$h->set_attribute('text2');
 isa_ok($b,"HO","return value is an object");
 is_deeply($b,$h,"returning self");
 
-my $n=new HO::attr;
+my $n=new HO::attr::autoload;
 $n->get_attribute("hallo") = "welt";
 ok($n->has_attribute('hallo'),"attr exists get_attribute lvalue");
 is($n->get_attribute('hallo'),'welt','attr set with lvalue get_attribute');
 is($n->attributes_string,' hallo="welt"','stringify 1');
 
-my $a=new HO::attr;
+my $a=new HO::attr::autoload;
 $a->hallo = "welt";
 ok($a->has_attribute('hallo'),"attr exists with lvalue autoload");
 is($a->get_attribute('hallo'),'welt','attr set with lvalue autoload');
