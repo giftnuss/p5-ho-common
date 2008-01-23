@@ -40,7 +40,7 @@
   }
   
 ; package HO::HTML::Double
-; use base qw/HO::tag HO::insertpoint/
+; use base qw/HO::tag HO::attr::autoload HO::insertpoint/
   
 ; our @TAGS = qw
   ( Html Head Title Body
@@ -72,7 +72,7 @@ __PERL__
 ; __PACKAGE__->create_tags(\@TAGS)
   
 ; package HO::HTML::Header
-; use base qw/HO::tag HO::insertpoint/
+; use base qw/HO::tag HO::attr::autoload HO::insertpoint/
 
 ; our @TAGS = qw(H)
 
@@ -88,9 +88,11 @@ __PERL__
     )
   
 ; package HO::HTML::Single
-; use base qw/HO::tag HO::insertpoint/
+; use base qw/HO::tag HO::attr::autoload HO::insertpoint/
   
 ; our @TAGS = qw(Br Hr Img Input)
+
+; sub _close_stag   () { ' >' } # inline
 
 ; HO::HTML::_make_tags(tags => \@TAGS
     , codegen =>

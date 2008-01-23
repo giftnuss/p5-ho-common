@@ -24,7 +24,7 @@ $h=HO::HTML::H(6);
 $p=HO::HTML::P;
 my $i=HO::HTML::Img;
 $h<<$p**$i;
-is("$h",'<h6><p><img /></p></h6>');
+is("$h",'<h6><p><img ></p></h6>');
 
 $h=HO::HTML::H(3,'eins');
 $p=HO::HTML::P()<<'zwei';

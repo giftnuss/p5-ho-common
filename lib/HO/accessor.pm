@@ -32,6 +32,23 @@
                      ; $obj->[$i] = $val
                      ; return $obj
                  }}
+    , '@' => sub { my ($n,$i) = @_
+                 ; return sub { my ($obj,$idx,$val) = @_
+                     ; return $obj->[$i] unless defined $idx # get arrayref
+                     ; if(ref $idx eq [])
+                         { $obj->[$i] = $idx                 # set complete array
+                         ; return $obj
+                         }
+                       else
+                         { if(@_==3)                         
+                             { $obj->[$i]->[$idx] = $val     # set one index
+                             ; return $obj
+                             }
+                           else
+                             { return $obj->[$i]->[$idx]     # get one index
+                             }
+                         }
+                 }}
     )
 
 ; our $class

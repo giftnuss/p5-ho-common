@@ -5,6 +5,7 @@
 ; use strict; use warnings
 
 ; require HO::accessor
+; require Carp
 
 ; sub import
     { my ($package,@args)=@_
@@ -117,7 +118,7 @@
 	       . 'sub '.$args{'name'}.' { new '.$args{'in'}.'::'.$args{'name'}.'(@_) }'
       }
   ; eval $code
-  ; die $@ if $@
+  ; Carp::croak($@) if $@
   }
 
 ; 1
