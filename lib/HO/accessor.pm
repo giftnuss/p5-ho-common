@@ -34,8 +34,10 @@
                  }}
     , '@' => sub { my ($n,$i) = @_
                  ; return sub { my ($obj,$idx,$val) = @_
-                     ; return $obj->[$i] unless defined $idx # get arrayref
-                     ; if(ref $idx eq [])
+                     ; if(@_==1) # get values
+                         { return wantarray ? @{$obj->[$i]} : $obj->[$i]
+                         }
+                     ; if(ref $idx eq 'ARRAY')
                          { $obj->[$i] = $idx                 # set complete array
                          ; return $obj
                          }

@@ -9,17 +9,17 @@
 ; our @ISA = ('Exporter')
 
 ; our @EXPORT = ()
-; our @EXPORT_OK = qw/node newline/
+; our @EXPORT_OK = qw/ho node newline/
 
-; use HO ()
+; use HO::node ()
 
 # functional constructor alias - future compatible -
 # good for example for learning by doing - it is not a good idea
 # to give it the same name like the class
 
-; sub node { new HO(@_) }
+; sub node { new HO::node(@_) }
 
-; sub newline() { node("\n") }
+; sub newline() { new HO::("\n") }
 
 ; 1
 
