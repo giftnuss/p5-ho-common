@@ -3,6 +3,20 @@
 ; our $VERSION='0.01'
 # *******************
 
+; use HO::class
+    _index => __is_single_tag => '$'
+    
+; sub is_single_tag : lvalue
+   { if( defined $_[1] )
+       { $_[0]->[&__is_single_tag] = $_[1] 
+	    ; return $_[0] 
+	    }
+     else
+	    { return $_[0]->[&__is_single_tag]
+	    }
+   }
+
+# move this to HO::HTML::Tag
 ; require HO::class
 ; require Exporter  
 

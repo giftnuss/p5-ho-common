@@ -17,7 +17,6 @@
        ; $self
        }
 
-
 ; sub init
     { return shift->insert( @_ ) }
 

@@ -69,22 +69,23 @@
 
     ; my $count=0
     ; foreach my $class (@build)
-        { my @acc=@{$classes{$class}} or next
+        { $classes{$class} or next
+	; my @acc=@{$classes{$class}} or next
         ; while (@acc)
             { my ($accessor,$type)=splice(@acc,0,2)
-            ; my $proto=$type{$type}
+            ; my $proto = ref($type) eq 'CODE' ? $type : $type{$type}
             ; unless(ref $proto eq 'CODE')
                 { warn "Unknown property type '$type', in setup for class $caller."
                 ; $proto=sub{undef}
                 }
             ; if($accessors{$class}{$accessor})
-                { $constructor[$accessors{$class}{$accessor}->()]=$type{$type}
+                { $constructor[$accessors{$class}{$accessor}->()] = $proto
                 }
               else
                 { my $val=$count
                 ; my $acc=sub {$val}
                 ; $accessors{$class}{$accessor}=$acc
-                ; $constructor[$acc->()]=$type{$type}
+                ; $constructor[$acc->()] = $proto
                 }
             ; $count++
             }

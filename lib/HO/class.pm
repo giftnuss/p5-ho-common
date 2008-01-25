@@ -21,6 +21,11 @@
         ; my ($name,$type,$code)
         ;({ '_method' => sub
             { ($name,$code) = splice(@args,0,2)
+            ; my $dach = index $name,'^'
+            ; if($dach>0)
+                { $name = substr($name,0,$dach)
+                ; push @acc, "__$name",sub { $code }
+                }
             ; push @acc, "_$name",'$'
             ; push @methods, $name, $code
             }
@@ -82,12 +87,25 @@
     ; { no strict 'refs'
       ; while(@methods)
           { my ($name,$code)=splice(@methods,0,2)
-          ; my $idx = HO::accessor::_value_of($class,"_$name")
-          ; *{join('::',$class,$name)} = sub 
-               { my $self = shift
-               ; $self->[$idx] ? $self->[$idx]->($self,@_)
-                               : $code->($self,@_)
-               }
+          ; my $dach = index $name,'^'
+          ; if($dach > 0)
+              { $name = substr($name,0,$dach) 
+              ; my $idx = HO::accessor::_value_of($class,"_$name")
+              ; my $cdx = HO::accessor::_value_of($class,"__$name")
+              ; *{join('::',$class,$name)} = sub 
+                  { my $self = shift; return
+                    $self->[$idx] ? $self->[$idx]->($self,@_)
+                                  : $self->[$cdx]->($self,@_)
+                  }
+              }
+            else
+              { my $idx = HO::accessor::_value_of($class,"_$name")
+              ; *{join('::',$class,$name)} = sub 
+                  { my $self = shift; return
+                    $self->[$idx] ? $self->[$idx]->($self,@_)
+                                  : $code->($self,@_)
+                  }
+              }
           }
       ; while(@lvalue)
           { my $name = shift(@lvalue)
@@ -125,4 +143,43 @@
 
 __END__
 
+=head1 NAME
 
+HO::class - class builder for hierarchical objects
+
+=head1 SYNOPSIS
+
+   package Foo::Bar;
+   use HO::class
+      _lvalue => hey => '@',
+      _method => huh => sub { print 'go' }
+      _rw     => spd => '%'
+      _ro     => cdu => '$'
+      
+=head1 DESCRIPTION
+
+This is a class builder. It does work during compile time. 
+
+Until now there are five different keywords which can be used
+to define different accessors.
+
+=head2 A Simple Slot To Define
+
+=head2 Methods Changeable For A Object
+
+How you can see, it is quite easy to do this in perl. Here during
+class construction you have to provide the default method, which
+is used when the object does not has an own method.
+
+The method name can be appended with an additional parameter C<static>
+separated by a colon. This means that the default method is stored
+in an additional slot in the object. So it is changeable on per class
+base. This is not the default, because the extra space required.
+
+   use HO::XML
+       _method => namespace:static => sub { undef }
+       
+Currently the word behind the colon could be free choosen. Only the
+existence of a colon in the name is checked.
+   
+ 

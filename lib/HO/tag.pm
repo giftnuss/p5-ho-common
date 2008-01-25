@@ -3,10 +3,9 @@
 ; use base 'HO::attr'
 ; our $VERSION = $HO::VERSION
 # ***************************
-  
-; use HO::class
-    _index => __is_single_tag => '$'
 
+# not well chosen -- singletag 
+  
 ; sub _tag : lvalue
     { $_[0]->_thread->[0] }
 
@@ -15,18 +14,12 @@
 ; sub _close_stag   () { ' />' } # inline
 ; sub _begin_endtag () { '</'  } # inline
 
-; sub _is_single_tag : lvalue
-    { if( defined $_[1] )
-        { $_[0]->[&__is_single_tag] = $_[1] 
-	; return $_[0] 
-	}
-      else
-	{ return $_[0]->[&__is_single_tag]
-	}
+; sub is_single_tag
+    { return $_[0]->count > 1
     }
 
 ; sub string
-    { if( $_[0]->_is_single_tag )
+    { if( $_[0]->is_single_tag )
         { return $_[0]->_single_tag }
       else
         { return $_[0]->_double_tag }
