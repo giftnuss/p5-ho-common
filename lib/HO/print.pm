@@ -27,6 +27,20 @@
     ; carp "Something is wrong with print_into file $file!\n$@" if $@;
     }
 
+; sub print_utf8_into
+    { my ($obj,$file)=@_
+    ; $dir=dirname($file);
+    ; mkpath $dir if not -d $dir
+    ; eval
+        { open TARGET,">:utf8","$file" or die "$^E"
+        ; my $old=select TARGET
+        ; $obj->print
+        ; close TARGET or die "$^E"
+        ; select $old;
+        }
+    ; carp "Something is wrong with print_utf8_into file $file!\n$@" if $@;
+    }
+
 ; 1
 
 __END__
