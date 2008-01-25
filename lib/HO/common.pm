@@ -42,12 +42,13 @@ with hierarchical object (HO) modules.
 
 =head2 node()
 
-This is an alias to say C<new HO()>. The sense why to this in favour of the
-direct constructor call is that a fuction is easier replaced during runtime.
+This is an alias to say C<new HO::node::()>. The sense why to this in favour
+of the direct constructor call is that a fuction is easier replaced during
+runtime and it is a little bit less to type.
 
 =head2 newline()
 
-This only a function to say C<"\n"> which is used for the same reason.
+This is only a function to say C<"\n">.
 
 =head1 AUTHOR
 
