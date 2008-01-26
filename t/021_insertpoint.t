@@ -8,6 +8,7 @@
     { use_ok('HO::tag');
       use_ok('HO::insertpoint');
       use_ok('HO::HTML');
+      push @HO::HTML::element::ISA,'HO::insertpoint'
     };
 
 my $html=HO::HTML::Html;

@@ -123,17 +123,26 @@
 ; sub make_subclass
   { my %args = @_
   ; $args{'of'}   ||= [ "".caller(1) ]
-  ; $args{'name'} || return
+  ; $args{'name'} || Carp::croak 'no name'
   ; $args{'in'}   ||= $args{'of'}->[0]
-  ; $args{'code'} ||= $args{'codegen'} ? $args{'codegen'}->(%args) : ''
+  ; unless($args{'code'})
+      { if(ref $args{'codegen'})
+	  { 
+	    $args{'code'} = $args{'codegen'}->(%args) 
+	  }
+	else
+	  { $args{'code'} = ''
+	  }
+      }
   # optional shortcut_in
       
   ; my $code = 'package '.$args{'in'}.'::'.$args{'name'}.';'
              . 'our @ISA = qw/'.join(' ',@{$args{'of'}}).'/;' . $args{'code'}
       
   ; if($args{'shortcut_in'})
-      { $code .= 'package '.$args{'shortcut_in'}.';'
-	       . 'sub '.$args{'name'}.' { new '.$args{'in'}.'::'.$args{'name'}.'(@_) }'
+      { my $sc = $args{'shortcut'} || $args{'name'}
+      ; $code .= 'package '.$args{'shortcut_in'}.';'
+	       . 'sub '.$sc.' { new '.$args{'in'}.'::'.$args{'name'}.'::(@_) }'
       }
   ; eval $code
   ; Carp::croak($@) if $@

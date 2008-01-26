@@ -15,7 +15,7 @@
 ; sub _begin_endtag () { '</'  } # inline
 
 ; sub is_single_tag
-    { return $_[0]->count > 1
+    { return $_[0]->count <= 1
     }
 
 ; sub string

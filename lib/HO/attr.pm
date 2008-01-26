@@ -33,7 +33,6 @@
     { delete $_[0]->_attributes->{$_[1]}
     ; $_[0]
     }
- 
 
 ; sub set_attributes
     { my ($obj,%attr)=@_
@@ -47,7 +46,7 @@
     ; my %attr   = %{$self->_attributes}
     ; foreach ( keys %attr )
         { $v=$attr{$_}
-	; $r .=  ref($v)     ? sprintf(" %s=\"%s\"",$_,"$v") 
+    ; $r .=  ref($v)    ? sprintf(" %s=\"%s\"",$_,"$v") 
 	      :  defined($v) ? sprintf(" %s=\"%s\"",$_,$v)
               :                sprintf(" %s",$_)
         }

@@ -8,8 +8,8 @@
     { use_ok('HO::tag') }
     
 ; my $a=new HO::tag('p')
-; ok(!_is_single_tag $a ())
-; is("$a",'<p></p>','simple double tag')
+; ok(is_single_tag $a ())
+; is("$a",'<p />','without content it is a single tag')
 
 ; is($a->_tag,'p','test tag method')
   
