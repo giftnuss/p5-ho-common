@@ -5,7 +5,6 @@
 # *************************
 ; use strict
 ; require Carp 
-  
 
 ; use HO::class
     _lvalue => _attributes => '%'

@@ -8,8 +8,8 @@
 
 ; DEFDEBUG:
   { no strict 'refs'
-  ; unless( defined *HO::attr::DEBUG_AUTOLOAD{'CODE'} )
-      { sub DEBUG_AUTOLOAD () { 0 }
+  ; unless( defined *HO::attr::autoload::DEBUG{'CODE'} )
+      { sub DEBUG () { 0 }
       }
   }
   
@@ -17,7 +17,7 @@
     { my $self=shift
     ; Carp::croak "AUTOLOAD ($AUTOLOAD) called without object." 
 	  unless ref $self
-    ; Carp::carp "AUTOLOAD: ".$AUTOLOAD if DEBUG_AUTOLOAD
+    ; Carp::carp "AUTOLOAD: ".$AUTOLOAD if DEBUG
     ; $AUTOLOAD =~ s/.*:://
     ; my @arg=@_
     ; if( @arg )

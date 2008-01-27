@@ -3,6 +3,7 @@
 ; use base 'HO::attr'
 ; our $VERSION = $HO::VERSION
 # ***************************
+; use strict; use warnings
 
 # not well chosen -- singletag 
   

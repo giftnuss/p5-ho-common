@@ -9,7 +9,7 @@
 ; use HO::class _method => 'namespace^cs' => sub { 'xml' }
 
 ; my $tag = new X::ML('code')
-; Test::More::is("$tag",'<xml:code></xml:code>')
+; Test::More::is("$tag",'<xml:code />')
 
 ; Test::More::is($tag->namespace,"xml")
 

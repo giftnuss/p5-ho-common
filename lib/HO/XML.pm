@@ -14,8 +14,8 @@
     ; my ($tag,@thread) = $self->content
 	  
     ; my $r = $self->_begin_tag
-    ; $r .= $self->namespace . ':' if $self->namespace
-          . $self->_tag . $self->attributes_string . $self->_close_stag
+    ; $r   .= $self->namespace . ':' if $self->namespace
+    ; $r   .= $self->_tag . $self->attributes_string . $self->_close_stag
     ; return $r
     }
     
