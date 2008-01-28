@@ -127,12 +127,12 @@
   ; $args{'in'}   ||= $args{'of'}->[0]
   ; unless($args{'code'})
       { if(ref $args{'codegen'})
-	  { 
-	    $args{'code'} = $args{'codegen'}->(%args) 
-	  }
-	else
-	  { $args{'code'} = ''
-	  }
+	      { 
+	        $args{'code'} = $args{'codegen'}->(%args) 
+	      }
+	    else
+	      { $args{'code'} = "$args{'codegen'}"
+	      }
       }
   # optional shortcut_in
       

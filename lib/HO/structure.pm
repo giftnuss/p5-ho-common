@@ -5,38 +5,6 @@
 ; use strict; use warnings
 
 ; use Carp qw/carp croak/
-;
-
-=head1 NAME
-
-HO::structure - something like an object template
-
-=head1 SYNOPSIS
-
-   package My::Structure::AB;
-   use base 'HO::structure';
-
-   __PACKAGE__->auto_slots;
-
-   sub new {
-       my $self = shift()->SUPER::new;
-       my $a = $self->area_setter;
-
-       my @m = new HO()->copy(3);
-       $m[0] << &$a('A',$m[1]) << &$a('B',$m[2]) << "\n";
-
-       return $self->set_root($m[0]);
-   }
-
-   # some where else
-   my $ab = new My::Structure::AB::;
-   $ab->A('HAUS')->B('TIER');
-
-   print $ab; # "HAUSTIER\n"
-
-=head1 DESCRIPTION
-
-=cut
 
 ; use HO::class
     _lvalue => _areas => '%',
@@ -52,9 +20,24 @@ HO::structure - something like an object template
         }
     ; unless( overload::Method($node,'""') )
         { croak "To string operator is not overloaded, key: '${key}'"
-        } 
+        }
     ; $obj->_areas->{$key} = $node
     ; return $obj
+    }
+    
+; sub has_area ($$)
+    { my ($obj,$key) = @_
+    ; return defined($obj->_areas->{$key})
+    }
+    
+; sub get_area ($$)
+    { my ($obj,$key) = @_
+    ; return $obj->_areas->{$key}
+    }
+    
+; sub list_areas ($)
+    { my ($obj) = @_
+    ; return keys %{$obj->_areas}
     }
 
 ; sub area_setter ($)
@@ -69,6 +52,11 @@ HO::structure - something like an object template
         } 
     ; $obj->_root = $node
     ; return $obj	
+    }
+    
+; sub get_root
+    { my ($obj) = @_
+    ; return $obj->_root
     }
 
 ; sub string
@@ -122,6 +110,36 @@ HO::structure - something like an object template
 
 __END__
 
+=head1 NAME
+
+HO::structure - something like an object template
+
+=head1 SYNOPSIS
+
+   package My::Structure::AB;
+   use base 'HO::structure';
+
+   __PACKAGE__->auto_slots;
+
+   sub new {
+       my $self = shift()->SUPER::new;
+       my $a = $self->area_setter;
+
+       my @m = new HO()->copy(3);
+       $m[0] << &$a('A',$m[1]) << &$a('B',$m[2]) << "\n";
+
+       return $self->set_root($m[0]);
+   }
+
+   # some where else
+   my $ab = new My::Structure::AB::;
+   $ab->A('HAUS')->B('TIER');
+
+   print $ab; # "HAUSTIER\n"
+
+=head1 DESCRIPTION
+
+=cut
 
 ; use strict
 ; use warnings
@@ -234,3 +252,6 @@ __END__
 
 __END__
 
+=head2 NOTES
+
+Bei Vererbung kann der Constraint in Zeile 48 nervig werden.

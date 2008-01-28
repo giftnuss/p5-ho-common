@@ -4,11 +4,20 @@
 ; our $VERSION = $HO::VERSION
 # ***************************
 ; use strict; use warnings
-
-# not well chosen -- singletag 
   
 ; sub _tag : lvalue
     { $_[0]->_thread->[0] }
+    
+; sub tag
+    { my ($self,$val) = @_
+    ; if(defined($val))
+        { $self->_tag = $val
+        ; return $self
+        }
+      else
+        { return $self->_tag
+        }
+    }
 
 ; sub _begin_tag    () { '<'   } # inline
 ; sub _close_tag    () { '>'   } # inline

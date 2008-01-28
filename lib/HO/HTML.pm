@@ -128,7 +128,12 @@
 ; sub list_names
     { map { $elements[$_*2] } 0..($#elements-1)/2
     }
-    
+
+; sub list_loaded
+    { map { $elements[$_*2] }
+      grep { $elements[$_*2+1]->[0] } 0..($#elements-1)/2
+    }
+
 ############################
 # IMPORT
 # tags => arrayref with tags to build

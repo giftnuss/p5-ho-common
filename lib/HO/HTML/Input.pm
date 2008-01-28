@@ -8,6 +8,7 @@
 ; our @ISA = ('Exporter')
 ; our @EXPORT
 ; our @EXPORT_OK = qw/IButton Checkbox Hidden Radio Text/
+; our %EXPORT_TAGS = (all => \@EXPORT_OK)
 
 ; use HO::HTML functional => [qw/Input/]
 
@@ -24,3 +25,9 @@
 ; 1
 
 __END__
+
+=head1 NAME
+
+HO::HTML::Input
+
+=head1 SYNOPSIS
