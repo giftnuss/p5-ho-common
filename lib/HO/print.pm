@@ -24,7 +24,8 @@
         ; close TARGET or die "$^E"
         ; select $old;
         }
-    ; carp "Something is wrong with print_into file $file!\n$@" if $@;
+    ; croak "Something is wrong with print_into file $file!\n$@" if $@;
+    ; return 1
     }
 
 ; sub print_utf8_into

@@ -91,7 +91,11 @@
               ; next
               }
           ; *{"${class}::${slot}"} = sub 
-              {  shift()->fill("${slot}", @_ ) 
+              { my ($self,@args) = @_
+              ; if(@args)
+                  { return $self->fill("${slot}", @args ) }
+                else
+                  { return $self->get_area("${slot}") }
               }
           ; push @result,$slot
           }
@@ -255,3 +259,5 @@ __END__
 =head2 NOTES
 
 Bei Vererbung kann der Constraint in Zeile 48 nervig werden.
+
+#ERwähnung sollte finden das diese Klasse keine init Methode hat.

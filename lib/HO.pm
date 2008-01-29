@@ -63,7 +63,21 @@
     ; my @copy
     ; for ( 1..$num )
         { my $copy=$obj->new()
-        ; @{$copy->_thread} = @{$obj->_thread()}
+        ; my @props = @{$obj}
+        ; for my $prop (0..$#props)
+            { if(ref $obj->[$prop] eq 'HASH')
+                {
+                  $copy->[$prop] = {%{$obj->[$prop]}}
+                }
+              elsif(ref $obj->[$prop] eq 'ARRAY')
+                {
+                  $copy->[$prop] = [@{$obj->[$prop]}]
+                }
+              else
+                {
+                  $copy->[$prop] = $obj->[$prop]
+                }
+            }
         ; push @copy,$copy
         }
     ; return wantarray ? @copy : defined($arg) ? \@copy : $copy[0] 

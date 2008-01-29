@@ -16,14 +16,14 @@
 
 ; sub new
     { my ($class)=shift
-    ; my %p=@_;
+    ; my %p=@_
     ; my $doctype   = $p{'doctype'} || 'transitional'
     ; my $titletext = $p{'title'} || ''
     ; my $metatags  = $p{'metatags'} || []
     ; my $root      = node() # new HO::HTML::Document::Type
-    ; my $head      = HO::HTML::Head()
+ 
     ; my %slot=
-        ( head   => $head
+        ( head   => HO::HTML::Head()
         , title  => HO::HTML::Title($titletext)
         , body   => HO::HTML::Body()
         , meta   => node($metatags)

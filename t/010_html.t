@@ -6,7 +6,7 @@
       { require_ok('HO::HTML')
       ; is(0+HO::HTML::seq_props(),@HO::HTML::elements/2)
       ; is(0+HO::HTML->list_names(),@HO::HTML::elements/2)
-      ; warn Dumper([HO::HTML->list_names])
+      #; warn Dumper([HO::HTML->list_names])
       ; use_ok('HO::HTML')
       ; my $init = $HO::HTML::inits[0]
       ; my $code = $init->(1,'img')
@@ -16,9 +16,3 @@
       }
       
   ; is("".A(),'<a></a>')
-  ; diag $@ if $@ 
-  
-  ; use Data::Dumper
-  
-  #; print Dumper \%HO::HTML::element::
-  #; print Dumper([HO::HTML->seq_props])

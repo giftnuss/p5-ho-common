@@ -35,7 +35,9 @@
     , '@' => sub { my ($n,$i) = @_
                  ; return sub { my ($obj,$idx,$val) = @_
                      ; if(@_==1) # get values
-                         { return wantarray ? @{$obj->[$i]} : $obj->[$i]
+                         { # etwas mehr Zugriffsschutz da keine Ref
+                           # einfache Anwendung in bool Kontext
+                         ; return @{$obj->[$i]}
                          }
                      ; if(ref $idx eq 'ARRAY')
                          { $obj->[$i] = $idx                 # set complete array

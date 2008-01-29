@@ -9,7 +9,7 @@
 ; our @ISA = ('Exporter')
 
 ; our @EXPORT = ()
-; our @EXPORT_OK = qw/ho node newline/
+; our @EXPORT_OK = qw/node newline/
 
 ; use HO::node ()
 
@@ -19,7 +19,10 @@
 
 ; sub node { new HO::node(@_) }
 
-; sub newline() { new HO::("\n") }
+; sub newline
+    { return new HO::("\n") unless @_
+    ; return new HO::("\n",@_,"\n")
+    }
 
 ; 1
 

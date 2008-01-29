@@ -22,7 +22,9 @@
     )
 
 ; our %current =
-    ( foundcount  => 'FoundCount'   # Aktuell aufgerufene Datensätze
+    ( date        => 'Date'         # Aktuelles Datum
+    , error       => 'Error'        # Fehlercode der letzten Aktion
+    , foundcount  => 'FoundCount'   # Aktuell aufgerufene Datensätze
     , recid       => 'RecID'        # System interne Record ID
     , recpos      => 'RecordNumber' # Aktuelle Position in der Auswahl
     , recordcount => 'RecordCount'  # Anzahl der vorhandenen Records
@@ -30,7 +32,6 @@
     , action      => 'Action'       # Zuletzt ausgeführte Datenbank Aktion
     , datasource  => 'Database'     # meist das gleiche wie ein DB-Table/Domain
     , layout      => 'Layout'       # eine beschränkte Auswahl von Feldern
-    , error       => 'Error'        # Fehlercode der letzten Aktion
     )
 
 ; sub current
