@@ -27,7 +27,6 @@
     ; return $self->insert(@_)
     }
 
-
 ; sub splice
     { my $self = shift
     ; my $offset = shift
@@ -35,18 +34,14 @@
     ; return CORE::splice(@{$self->_thread},$offset,$length,@_)
     }
 
-
 ; sub string
     { my $self=shift
-    ; my $r   = ""
-    ; $r .= ref($_) ? "$_" : $_ foreach $self->content
-    ; return $r
+    ; return join("",$self->content)
     }
 
-
 ; sub content
-    { return @{$_[0]->_thread} }
-
+    { return @{$_[0]->_thread} 
+    }
 
 ; sub concat
     { my ($o1,$o2,$reverse)=@_

@@ -114,7 +114,7 @@
 # Package Method
 ; sub accessors_for_class
     { my ($self,$class)=@_
-    ; $classes{$class}
+    ; return $classes{$class}
     }
 
 # Package Function

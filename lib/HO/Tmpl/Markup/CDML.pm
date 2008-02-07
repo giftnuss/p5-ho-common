@@ -85,8 +85,8 @@
     }
     
 ; sub choice
-    { my ($self,%args) = @_
-    ; return $baseclasses[2]->new(%args)
+    { my ($self,@args) = @_
+    ; return $baseclasses[2]->new(@args)
     }
     
 ; package HO::Tmpl::Markup::CDML::element
@@ -132,176 +132,71 @@
 # ***********************************************
 ; our $VERSION='0.01'
 # *******************
-; use base 'HO::structure'
+; use base 'HO::Tmpl::Markup::CDML::element::double'
 
-; use HO::common qw/node/
+# NOTE: here are no array refs allowed as arguments
+# Maybe add a check if array refs contain an even
+# number of arguments.
+; my $custom_insert = sub
+    { my ($self,@args) = @_
 
-; __PACKAGE__->auto_slots
-
+    ; if(@args%2) # an else exists
+        { $self->set_default_choice( pop @args )
+        }
+    ; push @{$self->_thread}, @args
+    ; return $self
+    }
+    
+; sub set_default_choice
+    { my ($self,$else) = @_
+    ; if($self->has_attribute('default'))
+        { $self->get_attribute('default')->insert($else)
+        }
+      else
+        { $self->set_attribute('default',new HO($else))
+        }
+    ; return $self
+    }
+    
 ; sub init
-    { my ($self,%args) = @_
-    ; my @st   = node()->copy(3)
-    ; $st[1] << $args{'Condition} if $args{'Condition'}
-    ; $st[2] << $args{'If}        if $args{'If'}
+    { my ($self,@args) = @_
+    ; my $class = ref $self
+
+    ; my $idx = HO::accessor::_value_of($class,"_insert")
+    ; $self->[$idx] = $custom_insert
+     
+    ; return $self->insert(@args)
+    }
+
+; sub string
+    { my $self=shift
+    ; my $r   = ""
+    ; my @list = $self->content
+    ; my ($c,$i) = splice(@list,0,2)
     
-    ; $st[0] << '[FMP-If: '  << $st[1] << ']' 
-                             << $st[2] << '[/FMP-If]'
+    ; $r .= $self->_begin_tag . 'If ' . $c . $self->_close_tag . $i
     
-    ; my @slot = qw(Condition If)
-    
-    ; foreach my $s ( 0..$#slot )
-        { $self->set_area($slot[$s],$st[$s+1])
+    ; while(@list)
+        { ($c,$i) = splice(@list,0,2)
+        ; $r .=  $self->_begin_tag . 'Else-If ' . $c . $self->_close_tag . $i
         }
         
-    ; return $self->set_root($st[0])
-    }
-    
-; # Mache morgen weiter mit super Duper choice!!!
-    
-; package HO::Tmpl::Markup::CDML::element::IfElse
-# ***********************************************
-; our $VERSION='0.01'
-# *******************
-    
-; __PACKAGE__->auto_slots
-
-; sub init
-    { my ($self,%args) = @_
-    ; my @st   = node()->copy(4)
-    ; $st[1] << $args{'Condition} if $args{'Condition'}
-    ; $st[2] << $args{'If}        if $args{'If'}
-    ; $st[3] << $args{'Else'}     if $args{'Else'}
-    
-    ; $st[0] << '[FMP-If: '  << $st[1] << ']' 
-                             << $st[2]
-             << '[FMP-Else]' << $st[3]**$else << '[/FMP-If]'
-    
-    ; my @slot = qw(Condition If Else)
-    
-    ; foreach my $s ( 0..$#slot )
-        { $self->set_area($slot[$s],$st[$s+1])
+    ; if($self->has_attribute('default'))
+        { $r .= $self->_begin_tag . 'Else ' . $self->_close_tag 
+              . $self->get_attribute('default')
         }
         
-    ; return $self->set_root($st[0])
+    ; $r .= $self->_begin_endtag . 'If' . $self->_close_tag 
+    ; return $r
     }
     
-; sub new
-    { my ($class,$cond,$if,$else)=@_
-    ; my $self = $class->HO::structure::new()
-    ; my @st  =new HO()->copy(4)
-    ; $st[0] << '[FMP-If: '  << $st[1]**$cond << ']' 
-                             << $st[2]**$if
-    ; $self->set_root($st[0])
-    ; my @slot=qw(condition if else)
-    ; foreach ( 0..$#slot )
-        { $self->set_area($slot[$_],$st[$_+1]) }
-    ; $self
-    }
-
 __END__
 
-; package CDML
-; use base 'HO::Tag'
 
-# The FileMaker Dynamic Markup Language or FDML was a markup language used in 
-# the earlier versions of FileMaker introduced in 1998. It is also often 
-# referred to as Claris Dynamic Markup Language or CDML, named after the old 
-# company Claris.
-#
-# from wikipedia
-
-; our $VERSION='0.0.2'
-
-
-
-; package CDML::Single
-; use base 'CDML'
-
-; sub get { $_[0]->HO::Tag::Single::get() }
-
-; package CDML::Single::Encode
-; use base 'CDML::Single'
-
-; use Carp
-
-; sub new
-    { my ($class,$name,$encode,@arg)=@_
-    ; my $pack = ref $class ? ref $class : $class
-    ; $pack =~ s/.*:://
-    ; my $self=$class->SUPER::new($pack,@arg) 
-    ; $encode ||= 'Raw'
-    ; carp unless $name
-    ; $self->name($name)
-    ; $self->encode($encode)
-    }
-    
-; sub get_attributes
-    { my $name  =$_[0]->get_attribute('name')
-    ; my $encode=$_[0]->get_attribute('encode') || 'Raw'
-    ; ": $name, $encode"
-    }
-    
-; package CDML::Client
-; use base 'CDML::Single'
-
-; sub new
-    { my ($class,$typ,@arg)=@_
-    ; $class->SUPER::new("Client${typ}",@arg)
-    }
-
-; package CDML::Field
-; use base 'CDML::Single::Encode'
-
-
-# ; package CDML::FieldName
-# ; use base 'CDML::Single::Encode'
-
-; package CDML::Current
-; use base 'CDML::Single'
-
-; sub new
-    { my ($class,$type,@arg)=@_
-    ; $class->SUPER::new('Current'.$type,@arg)
-    }
-    
-; package CDML::Token
-; use base 'CDML::Current'
-
-; sub new
-    { my ($class,$num,@arg)=@_
-    ; $class->SUPER::new("Token: $num",@arg)
-    }
-    
-; package CDML::Double
-; use base ('CDML','HO::Tag::Double')
-
-; sub new
-    { my ($class,@args)=@_
-    ; $class = ref $class if ref $class
-	; my $tag=$class->tagname
-    ; unless($tag)
-        { $tag = substr($class,-1*index(reverse($class),':')) }
-    ; $class->SUPER::new($tag,@args)
-    }
-	
-; sub tagname { undef }
-    
-; sub get     { HO::Tag::Double::get(@_) }
-    
-; package CDML::Record; use base 'CDML::Double'
-; sub tagname () {'Record'}
-
-; package CDML::ValueListItem; use base 'CDML::Single'
-; sub new { shift()->SUPER::new('ValueListItem') }
-
-; package CDML::ValueList; use base 'CDML::Double'
-; sub new { my $self=shift()->SUPER::new() 
-	      ; $self->name(shift())
-          }
-; sub get_attributes { ": ".$_[0]->name }
-
-; package CDML::ValueListChecked; use base 'CDML::Single'
-; sub new { shift()->SUPER::new('ValueListChecked') }
-
-; 1
+    # The FileMaker Dynamic Markup Language or FDML was a markup language used in 
+    # the earlier versions of FileMaker introduced in 1998. It is also often 
+    # referred to as Claris Dynamic Markup Language or CDML, named after the old 
+    # company Claris.
+    #
+    # from wikipedia
 

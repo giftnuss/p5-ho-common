@@ -3,13 +3,13 @@ name: HO
 version: 0.61
 author:
   - 'Sebastian Knapp <sk@computer-leipzig.com>'
-abstract: hierachical (array based) objects
+abstract: "hierachical (array based) objects"
 license: perl
-resources:
-  license: http://dev.perl.org/licenses/
 requires:
   perl: 5.006
 generated_by: Module::Build version 0.2808
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2
+resources:
+  license: http://dev.perl.org/licenses/
