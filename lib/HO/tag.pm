@@ -61,45 +61,6 @@
     ; @{$_[0]->_thread} = ($_[0]->_tag,@args)
     }
 
-; our %CATALOG
-
-; sub class_builder
-    { shift if @_ % 2 # called with package or object 
-    ; my %args = @_
-
-    ; $args{'base'}    ||= __PACKAGE__
-    ; $args{'catalog'} ||= \%__PACKAGE__::CATALOG
-    # $args{'accessor'} -> verschiedene Objekte über den selben Namen ansprechen
-
-    ; sub
-        { my ($classname => $baseclass => $tag => $access) = @_
-        ; my $package = $args{'base'}.'::'.$classname
-        ; return if defined $args{'catalog'}->{$package}
-
-        ; $tag    ||= lc $classname
-        ; $access ||= $args{'accessor'} || ucfirst $classname
-
-        ; eval qq~ package $package; our \@ISA = qw($baseclass)
-                 ; sub new { shift()->SUPER::new("$tag",\@_) }
-                 ; sub $access { new $package (\@_) }
-                 ~
-        }
-    }
-
-; package HO::tag::suffix
-; use base 'HO::tag'
-
-; sub tag
-    { $_[0]->_thread->[0].$_[0]->_thread->[1] }
-
-; sub is_single_tag
-    { defined $_[0]->_thread->[2] }
-
-; sub content
-    { my ($tag,$suffix,@t)=@{$_[0]->_thread}
-    ; ($_[0]->tag,@t)
-    }
-
 ; 1
 
 __END__

@@ -3,6 +3,7 @@
 # t/021_insertpoint.t - check module loading and the simple api
 
 ; use Test::More tests => 4
+; no warnings 'void'
 
 ; BEGIN
     { use_ok('HO::tag');

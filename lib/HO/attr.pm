@@ -41,15 +41,18 @@
 
 ; sub attributes_string
     { my ($self) = @_
-    ; my ($r,$v) = ("","")
-    ; my %attr   = %{$self->_attributes}
-    ; foreach ( keys %attr )
-        { $v=$attr{$_}
-    ; $r .=  ref($v)    ? sprintf(" %s=\"%s\"",$_,"$v") 
-	      :  defined($v) ? sprintf(" %s=\"%s\"",$_,$v)
-              :                sprintf(" %s",$_)
+    ; my $r    = ""
+    ; my %attr = %{$self->_attributes}
+    ; foreach my $k ( keys %attr )
+        { $r .= $self->write_attribute($k,$attr{$k})
         }
     ; return $r
+    }
+    
+; sub write_attribute
+    { my ($self,$key,$value) = @_
+    ; return defined($value) ? sprintf(" %s=\"%s\"",$key,$value)
+                             : sprintf(" %s",$key)
     }
 
 ; 1
