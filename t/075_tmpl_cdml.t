@@ -1,5 +1,5 @@
 ; use strict; use warnings
-; use Test::More tests => 16
+; use Test::More tests => 17
 
 ; BEGIN
     { use_ok('HO::Tmpl::Markup::CDML','Cdml')
@@ -29,3 +29,7 @@
     
 ; is("".Cdml->field(name => 'fld'),'[FMP-Field: fld, Raw]')
 ; is("".Cdml->field(name => 'fld', encode => 'HTML'),'[FMP-Field: fld, HTML]')
+
+; my $expected = '[FMP-If: CurrentAction.neq.VIEW]test[/FMP-If]'
+; my $condition = Cdml->current('action')->tag.'.neq.VIEW'
+; is("".Cdml->choice($condition,'test'),$expected)

@@ -174,15 +174,15 @@
     ; my @list = $self->content
     ; my ($c,$i) = splice(@list,0,2)
     
-    ; $r .= $self->_begin_tag . 'If ' . $c . $self->_close_tag . $i
+    ; $r .= $self->_begin_tag . 'If: ' . $c . $self->_close_tag . $i
     
     ; while(@list)
         { ($c,$i) = splice(@list,0,2)
-        ; $r .=  $self->_begin_tag . 'Else-If ' . $c . $self->_close_tag . $i
+        ; $r .=  $self->_begin_tag . 'ElseIf: ' . $c . $self->_close_tag . $i
         }
         
     ; if($self->has_attribute('default'))
-        { $r .= $self->_begin_tag . 'Else ' . $self->_close_tag 
+        { $r .= $self->_begin_tag . 'Else' . $self->_close_tag 
               . $self->get_attribute('default')
         }
         
