@@ -7,9 +7,10 @@
 ; use HO::common qw/node newline/
 ; use HO::HTML functional => [qw/Script/]
 
-; unless(HO::HTML::element::script->isa('HO::insertpoint'))
-    { push @HO::HTML::element::script::ISA, 'HO::insertpoint'
-    }
+; our @ISA = 'HO::HTML'
+; our @EXPORT
+; our @EXPORT_OK = qw/Javascript JavascriptNC/
+; our %EXPORT_TAGS = (all => \@EXPORT_OK)
 
 # defines a script block
 ; sub Javascript
@@ -22,10 +23,9 @@
     ; $tag->type($opts->{'type'}) if $opts->{'type'}
     
     ; unless($opts->{'nocomment'})
-        { my $node = node()
-        ; $tag->inserpoint($node)
-        ; $tag << newline() << "<!--//" << newline()
-               << $node << newline() << "//-->" << newline()
+        { my $node = node(@args)
+        ; $tag << "<!--//" << newline() << $node << newline() << "//-->" 
+        ; $tag->insertpoint($node)
         }
     ; return $tag
     }

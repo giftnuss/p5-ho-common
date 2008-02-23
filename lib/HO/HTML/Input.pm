@@ -4,13 +4,12 @@
 # *******************
 ; use strict; use warnings
 
-; require Exporter  
-; our @ISA = ('Exporter')
+; use HO::HTML functional => [qw/Input/]
+
+; our @ISA = ('HO::HTML')
 ; our @EXPORT
 ; our @EXPORT_OK = qw/IButton Checkbox Hidden Radio Text/
 ; our %EXPORT_TAGS = (all => \@EXPORT_OK)
-
-; use HO::HTML functional => [qw/Input/]
 
 ; sub IButton  { return Input(@_)->type('button') }
 

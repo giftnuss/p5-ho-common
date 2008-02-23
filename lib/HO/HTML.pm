@@ -118,7 +118,6 @@
 ; our @baseclasses =
     ( 'HO::HTML::element'
     , 'HO::HTML::element::header'
-    , 'HO::HTML::Input'
     )
 
 ; sub seq_props
@@ -145,13 +144,15 @@
   ; our @elements
   ; local $_
 	
+  # create only a subset of tags
   ; for (0,2)
       { if(defined($args[$_]) && $args[$_] eq 'tags')
           { my (undef,$tags) = splice(@args,$_,2)
-	       ; $pkg->create_tags(@{$tags})
-	       }
+          ; $pkg->create_tags(@{$tags})
+          }
       }
 
+  # otherwise build all tags
   ; unless(grep { $elements[$_]->[0] } seq_props())
       { $pkg->create_tags($pkg->list_names)
       }
@@ -168,7 +169,7 @@
                   if $elements[$i]->[0]
               }
           }
-      ; __PACKAGE__->export_to_level(1,$pkg,@EXPORT)
+      ; $pkg->export_to_level(1,$pkg,@EXPORT)
       }
     }
   }

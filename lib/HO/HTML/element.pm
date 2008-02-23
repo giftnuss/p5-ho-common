@@ -4,9 +4,9 @@
 # *******************
 
 ; use base ( 'HO::tag'
-           , 'HO::attr::autoload'
            , 'HO::insertpoint'
            , 'HO::HTML::attribute'
+           , 'HO::attr::autoload'
            )
 
 ; use HO::class

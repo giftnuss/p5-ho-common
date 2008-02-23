@@ -1,9 +1,10 @@
 ; use strict; use warnings
 ; use Test::More tests => 6
 
-; BEGIN { use_ok('HO::HTML::Input',qw
-    / IButton Checkbox Hidden Radio Text /)
-    }
+; BEGIN { use_ok('HO::HTML::Input',
+                 functional => [qw/IButton Checkbox Hidden Radio Text/]
+                )
+        }
     
 ; is("".IButton(),'<input type="button" >')
 
