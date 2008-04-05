@@ -64,3 +64,11 @@
 ; 1
 
 __END__
+
+=head1 NAME
+
+HO::tag
+  
+=head1 SYNOPSIS
+
+...
