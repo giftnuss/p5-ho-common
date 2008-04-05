@@ -1,6 +1,6 @@
 use strict;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 
 require_ok('HO::accessor');
 
@@ -46,5 +46,10 @@ Test::More::isa_ok($tw2,'T::one_without_constr');
 ; Test::More::is($e->name,'timestamp')
 ; Test::More::is($e->href,'http://localhost:8091/time/')
     
-
-
+# TODO skip when profiling 
+; package T::plus
+; use HO::class
+    _lvalue => val => '%'
+ 
+; Test::More::is_deeply((T::plus->new->val={}),{})
+ 
