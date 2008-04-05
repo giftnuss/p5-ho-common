@@ -10,6 +10,10 @@
 ; use HO::common qw/node newline/
 ; use HO::HTML
 
+#; use HO::HTML        ( namespace => __PACKAGE__, functional => 1 )
+#; use HO::HTML::Meta  ( namespace => __PACKAGE__, functional => 1 )
+#; use HO::HTML::Style ( namespace => __PACKAGE__, functional => 1 )
+#; use HO::HTML::Script( namespace => __PACKAGE__, functional => 1 )
 #; use HO::HTML::Document::Type
 
 ; __PACKAGE__->make_slots qw(head title body meta style script)
@@ -17,7 +21,7 @@
 ; sub new
     { my ($class)=shift
     ; my %p=@_
-    ; my $doctype   = $p{'doctype'} || 'transitional'
+    ; my $doctype   = _doctype($p{'doctype'} || 'transitional')
     ; my $titletext = $p{'title'} || ''
     ; my $metatags  = $p{'metatags'} || []
     ; my $root      = node() # new HO::HTML::Document::Type
@@ -32,7 +36,7 @@
         )
 
     ; my ($html)=(HO::HTML::Html())
-    ; $root << newline()
+    ; $root << $doctype << newline()
             << ($html << newline()
                       << ($slot{head} << $slot{meta}
                                       << $slot{title}
@@ -47,6 +51,24 @@
         { $self->set_area($slot,$area) }
 
     ; $self
+    }
+    
+; our %DOCTYPE =
+    ( html2 => 
+    '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">'
+    , transitional =>
+    '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
+    , strict =>
+    '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+            "http://www.w3.org/TR/html4/strict.dtd">'
+    , frameset =>
+    '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">'
+    )
+    
+; sub _doctype
+    { shift if $_[0] eq __PACKAGE__
+    ; return
+        $DOCTYPE{$_[0]} || ''
     }
 
 ; sub NoCache
@@ -68,3 +90,4 @@
 ; 1
 
 __END__
+
