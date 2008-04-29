@@ -1,12 +1,13 @@
   package HO::tag
 # ***************
 ; use base 'HO::attr'
-; our $VERSION = $HO::VERSION
-# ***************************
+; our $VERSION='0.01'
+# *******************
 ; use strict; use warnings
   
 ; sub _tag : lvalue
-    { $_[0]->_thread->[0] }
+    { $_[0]->_thread->[0] 
+    }
     
 ; sub tag
     { my ($self,$val) = @_

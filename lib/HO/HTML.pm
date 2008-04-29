@@ -267,6 +267,14 @@ __PERL__
 
 __END__
 
+=head1 NAME
+
+HO::HTML
+
+=head1 BUGS
+
+   * import functional for subclasses does not work
+
     
 ; sub _make_tags
   { my $baseclass = caller(0)

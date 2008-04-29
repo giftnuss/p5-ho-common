@@ -10,12 +10,6 @@
 ; use HO::common qw/node newline/
 ; use HO::HTML
 
-#; use HO::HTML        ( namespace => __PACKAGE__, functional => 1 )
-#; use HO::HTML::Meta  ( namespace => __PACKAGE__, functional => 1 )
-#; use HO::HTML::Style ( namespace => __PACKAGE__, functional => 1 )
-#; use HO::HTML::Script( namespace => __PACKAGE__, functional => 1 )
-#; use HO::HTML::Document::Type
-
 ; __PACKAGE__->make_slots qw(head title body meta style script)
 
 ; sub new

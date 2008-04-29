@@ -27,6 +27,7 @@
     ; return $self->insert(@_)
     }
 
+
 ; sub splice
     { my $self = shift
     ; my $offset = shift
@@ -34,14 +35,16 @@
     ; return CORE::splice(@{$self->_thread},$offset,$length,@_)
     }
 
+
 ; sub string
     { my $self=shift
     ; return join("",$self->content)
     }
 
+
 ; sub content
-    { return @{$_[0]->_thread} 
-    }
+    { return @{$_[0]->_thread} }
+
 
 ; sub concat
     { my ($o1,$o2,$reverse)=@_
@@ -58,29 +61,36 @@
     ; my @copy
     ; for ( 1..$num )
         { my $copy=$obj->new()
-        ; my @props = @{$obj}
-        ; for my $prop (0..$#props)
-            { if(ref $obj->[$prop] eq 'HASH')
-                {
-                  $copy->[$prop] = {%{$obj->[$prop]}}
-                }
-              elsif(ref $obj->[$prop] eq 'ARRAY')
-                {
-                  $copy->[$prop] = [@{$obj->[$prop]}]
-                }
-              else
-                {
-                  $copy->[$prop] = $obj->[$prop]
-                }
-            }
+        ; $obj->duplicate($copy)
         ; push @copy,$copy
         }
     ; return wantarray ? @copy : defined($arg) ? \@copy : $copy[0] 
     }
-
+    
+# this helps to overwrite copy
+; sub duplicate
+    { my ($obj,$duplicate) = @_
+    ; my @props = @{$obj}
+    ; for my $prop (0..$#props)
+        { if(ref $obj->[$prop] eq 'HASH')
+            {
+              $duplicate->[$prop] = {%{$obj->[$prop]}}
+            }
+          elsif(ref $obj->[$prop] eq 'ARRAY')
+            {
+              $duplicate->[$prop] = [@{$obj->[$prop]}]
+            }
+          else
+            {
+              $duplicate->[$prop] = $obj->[$prop]
+            }
+        }
+    ; return $duplicate
+    }
 
 ; sub count
-   { return scalar @{$_[0]->_thread} }
+   { return scalar @{$_[0]->_thread}
+   }
 
 
 ; use overload
