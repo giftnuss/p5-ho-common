@@ -1,7 +1,7 @@
   package HO::class
 # *****************
-; our $VERSION=$HO::VERSION
-# *************************
+; our $VERSION='0.03'
+# *******************
 ; use strict; use warnings
 
 ; require HO::accessor
@@ -15,6 +15,7 @@
     ; my @methods     # method changeable on a per object base
     ; my @lvalue      # lvalue accessor
     ; my @r_          # common accessors
+    ; my $makeinit    # key for init method or subref used as init
 
     ; while(@args)
         { my $action = lc(shift @args)
@@ -64,6 +65,9 @@
                     }
                 }
             }
+          , 'init' => sub
+              { $makeinit = shift @args
+              }
           # no actions => options
           # all are unsupported until now
           , 'noconstructor' => sub
@@ -81,7 +85,7 @@
     }
     ; if($makeconstr)
         { local $HO::accessor::class = $class 
-        ; import HO::accessor:: \@acc 
+        ; import HO::accessor:: (\@acc,$makeinit) 
         }
 
     ; { no strict 'refs'

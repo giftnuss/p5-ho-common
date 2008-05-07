@@ -10,7 +10,7 @@ is_deeply([HO::HTML::->list_loaded],[HO::HTML::->list_names]);
 
 ; use Data::Dumper
 
-; my $doc = HO::HTML::Document->new()
+; my $doc = HO::HTML::Document->new(doctype => 'none')
 
 ; isa_ok($doc,'HO::HTML::Document')
 ; ok($doc->isa('HO::structure'))

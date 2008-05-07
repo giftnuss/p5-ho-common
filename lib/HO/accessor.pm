@@ -11,6 +11,17 @@
 
 ; our %type = ('@'=>sub{[]},'%'=>sub{{}},'$'=>sub{undef})
 
+; our %init =
+    ( 'hash' => sub
+        { my ($self,%args) = @_
+        ; while(my ($method,$value)=each(%args))
+            { my $access = "_$method" 
+            ; $self->[$self->$access] = $value            	
+            }
+        ; return $self
+        }
+    )
+
 ; our %ro_accessor =
     ( '$' => sub { my ($n,$i) = @_ 
                  ; return sub (){ shift()->[$i] } 
@@ -21,7 +32,8 @@
                  }}
     , '%' => sub { my ($n,$i) = @_
                  ; return sub { my ($obj,$key) = @_
-                     ; $obj->[$i]->{$key}
+                 ; (@_==1) ? {%{$obj->[$i]}}
+                           : $obj->[$i]->{$key}
                  }}
     )
     
@@ -45,7 +57,15 @@
                          }
                        else
                          { if(@_==3)                         
-                             { $obj->[$i]->[$idx] = $val     # set one index
+                             { if($idx eq '<')
+                                 { push @{$obj->[$i]}, $val
+                                 }
+                               elsif($idx eq '>')
+                                 { unshift @{$obj->[$i]}, $val
+                                 }
+                               else
+                                 { $obj->[$i]->[$idx] = $val     # set one index
+                                 }
                              ; return $obj
                              }
                            else
@@ -53,12 +73,38 @@
                              }
                          }
                  }}
+    , '%' => sub { my ($n,$i) = @_
+                 ; return sub { my ($obj,$key) = @_
+                 ; if(@_==1)
+                     { return $obj->[$i] # for a hash an reference is easier to handle
+                     }
+                   elsif(@_==2)
+                     { if(ref($key) eq 'HASH')
+                     	{ $obj->[$i] = $key
+                     	; return $obj
+                     	}
+                       else
+                        { return $obj->[$i]->{$key}
+                        }
+                     }
+                   else
+                     { shift(@_)
+                     ; my @kv = @_
+                     ; while(@kv)
+                         {
+                         	$obj->[$i]->{shift(@kv)} = shift(@kv)
+                         }
+                     ; return $obj
+                     }
+                 }}
     )
 
 ; our $class
 
 ; sub import
-    { my ($package,$ac) = (@_,[])
+    { my ($package,$ac,$init) = @_
+    ; $ac   ||= []
+
     ; my $caller = $HO::accessor::class || caller
 
     ; die "HO::accessor::import already called for class $caller."
@@ -94,7 +140,7 @@
         }
     ; { no strict 'refs'
       ; *{"${caller}::new"}=
-          $caller->can('init') ?
+          ($init || $caller->can('init')) ?
             sub
               { my ($self,@args)=@_
               ; bless([map {ref() ? $_->() : $_} @constructor], ref $self || $self)
@@ -109,6 +155,18 @@
           { *{"${caller}::${acc}"}=$accessors{$caller}{$acc}
           }
       }
+      
+    # setup init method
+    ; if($init)
+        { unless(ref($init) eq 'CODE' )
+        	{ $init = $init{$init}
+        	; unless(defined $init)
+        	    { Carp::croak "There is no init defined for init argument $init."
+        	    }
+        	}
+        ; no strict 'refs'
+        ; *{"${caller}::init"}= $init
+        }
     }
 
 # Package Method
