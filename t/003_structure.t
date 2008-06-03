@@ -5,7 +5,7 @@
 ###############################################################################
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 23;
 
 ################
 # load 2
@@ -52,6 +52,57 @@ $structure->set_area('B',$m[1]);
 # stringify 1
 ################
 is("$structure","AB",'stringify works');
+
+isa_ok($structure->fill('B','C'),'HO::structure', "fill returns self");
+ 
+is("$structure","ABC",'stringify works');
+
+####################
+# Internals
+####################
+is($structure->__areas,0,"__areas == 0");
+is($structure->__root,1 ,"__root  == 1");
+ 
+isa_ok($structure->_areas,"HASH");
+isa_ok($structure->_root,'HO');
+
+####################
+# Building a simple
+# subclass
+####################
+eval
+    { package Test::Structure;
+      no warnings 'void';
+      @Test::Structure::ISA = ('HO::structure');
+
+      sub new {
+          my $self = shift->SUPER::new;
+          my $a = $self->area_setter;
+
+          my @m = new HO()->copy(3);
+          $m[0] << &$a('A',$m[1]) << &$a('B',$m[2]) << "\n";
+
+          return $self->set_root($m[0]);
+      }
+
+      __PACKAGE__->auto_slots;
+    };
+
+diag($@) if $@;
+ok(!$@);
+
+my $ab = Test::Structure->new;
+
+is($ab->__areas,0,"__areas == 0");
+is($ab->__root,1 ,"__root  == 1");
+
+
+isa_ok($ab->_areas,"HASH");
+isa_ok($ab->_root,'HO');
+
+$ab->A('HAUS')->B('TIER');
+
+is("$ab", "HAUSTIER\n");
 
 
 __END__

@@ -1,9 +1,8 @@
 
-HO stands for hierachical objects and is small object oriented
-library to setup to create easy write only objects. Write only
-means it is not so easy and not really supported by the api to
-modify the structure of the created objects once after there
-placement inside the hierarchy.
+HO stands for hierachical objects and is a small object oriented
+library to create write only objects. Write only means it is not 
+so easy and not really supported by the api to modify the structure 
+of the created objects once after there placement inside the hierarchy.
 
 Another drawback is that there is no builtin protection against
 endless loops when a object is placed somewhere inside of himself.

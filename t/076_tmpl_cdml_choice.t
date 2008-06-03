@@ -21,9 +21,9 @@
     ; $st[0] << '[FMP-If: '  << $st[1]**$cond << ']' 
                              << $st[2]**$if   << '[/FMP-If]'
     ; $self->set_root($st[0])
-    
+
     ; my @slot=("condition","if")
-    
+
     ; foreach ( 0..$#slot )
         { $self->set_area($slot[$_],$st[$_+1]) }
     ; $self
@@ -45,7 +45,7 @@
         { $self->set_area($slot[$_],$st[$_+1]) }
     ; $self
     }
-    
+
 ; package CDML::Choice
 ; use base 'CDML::If'
 
@@ -55,7 +55,7 @@
     ; my $root = new HO()
     ; my ($bc,$bv)=(shift(@args),shift(@args))
     ; $root << '[FMP-If: ' << new HO($bc) << ']' << new HO($bv)
-    
+
     ; my $default= @args % 2 ? pop(@args) : ""
     ; while( @args )
         { $root << '[FMP-ElseIf: ' << new HO(shift(@args)) << ']' 
@@ -65,16 +65,16 @@
     ; $self->set_root($root)
     ; $self
     }
-    
+
 ; package main
 
-; is(Cdml()->choice("FLD.eq.VAL","true"),new CDML::If("FLD.eq.VAL","true"))
+; is("".Cdml()->choice("FLD.eq.VAL","true"),new CDML::If("FLD.eq.VAL","true"))
 
 
-; is( Cdml()->choice("FLD.eq.VAL","true","false")
+; is("".Cdml()->choice("FLD.eq.VAL","true","false")
     , new CDML::IfElse("FLD.eq.VAL","true","false"))
-    
-    
+
+
 ; "giftnuss"
 
 __END__

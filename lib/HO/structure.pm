@@ -1,10 +1,10 @@
   package HO::structure
 #**********************
-; our $VERSION='0.03'
-#********************
 ; use strict; use warnings
+; our $VERSION='0.04'
+#********************
 
-; use Carp qw/carp croak/
+; use Carp ()
 
 ; use HO::class
     _lvalue => _areas => '%',
@@ -13,28 +13,28 @@
 ; sub set_area ($$$)
     { my ($obj,$key,$node) = @_
     ; if( exists $obj->_areas->{$key} )
-        { croak "The area '$key' already exists."
+        { Carp::croak("The area '$key' already exists.")
         }
     ; unless( $node->can("insert") )
-        { croak "The object can not insert something, key: '${key}'"
+        { Carp::croak("The object can not insert something, key: '${key}'")
         }
     ; unless( overload::Method($node,'""') )
-        { croak "To string operator is not overloaded, key: '${key}'"
+        { Carp::croak("To string operator is not overloaded, key: '${key}'")
         }
     ; $obj->_areas->{$key} = $node
     ; return $obj
     }
-    
+
 ; sub has_area ($$)
     { my ($obj,$key) = @_
     ; return defined($obj->_areas->{$key})
     }
-    
+
 ; sub get_area ($$)
     { my ($obj,$key) = @_
     ; return $obj->_areas->{$key}
     }
-    
+
 ; sub list_areas ($)
     { my ($obj) = @_
     ; return keys %{$obj->_areas}
@@ -48,7 +48,7 @@
 ; sub set_root
     { my ($obj,$node)=@_
     ; unless( overload::Method($node,'""') )
-        { croak "To string operator is not overloaded for root node."
+        { Carp::croak("To string operator is not overloaded for root node.")
         } 
     ; $obj->_root = $node
     ; return $obj	
@@ -87,7 +87,7 @@
     ; { no strict 'refs'
       ; foreach my $slot (@nodes)
           { if( $class->can($slot) )
-              { carp "The class '${class}' has a method '${slot}', no slot defined."
+              { Carp::carp("The class '${class}' has a method '${slot}', no slot defined.")
               ; next
               }
           ; *{"${class}::${slot}"} = sub 

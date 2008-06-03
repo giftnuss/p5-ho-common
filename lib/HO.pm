@@ -1,8 +1,8 @@
   package HO
 # ==========
 ; use strict
-; our $VERSION='0.61';
-# ====================
+; our $VERSION='0.61'
+# ===================
 
 # this way HO::class knows that there is a init method
 ; use subs qw/init/
