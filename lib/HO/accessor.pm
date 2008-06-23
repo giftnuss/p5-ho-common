@@ -5,6 +5,7 @@
 ; use strict; use warnings
 
 ; use Class::ISA
+; require Carp
 
 ; my %classes
 ; my %accessors
@@ -28,7 +29,10 @@
                  }
     , '@' => sub { my ($n,$i) = @_
                  ; return sub { my ($obj,$idx) = @_
-                     ; $obj->[$i]->[$idx]
+                     ; if(@_==1)
+                        {return @{$obj->[$i]}}
+                       else
+                        {return $obj->[$i]->[$idx]}
                  }}
     , '%' => sub { my ($n,$i) = @_
                  ; return sub { my ($obj,$key) = @_
@@ -91,8 +95,8 @@
                      { shift(@_)
                      ; my @kv = @_
                      ; while(@kv)
-                         {
-                         	$obj->[$i]->{shift(@kv)} = shift(@kv)
+                         { my ($k,$v) = splice(@kv,0,2)
+                         ; $obj->[$i]->{$k} = $v
                          }
                      ; return $obj
                      }
@@ -123,7 +127,7 @@
             { my ($accessor,$type)=splice(@acc,0,2)
             ; my $proto = ref($type) eq 'CODE' ? $type : $type{$type}
             ; unless(ref $proto eq 'CODE')
-                { warn "Unknown property type '$type', in setup for class $caller."
+                { Carp::carp("Unknown property type '$type', in setup for class $caller.")
                 ; $proto=sub{undef}
                 }
             ; if($accessors{$class}{$accessor})
@@ -161,7 +165,7 @@
         { unless(ref($init) eq 'CODE' )
         	{ $init = $init{$init}
         	; unless(defined $init)
-        	    { Carp::croak "There is no init defined for init argument $init."
+        	    { Carp::croak("There is no init defined for init argument $init.")
         	    }
         	}
         ; no strict 'refs'
