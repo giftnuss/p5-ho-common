@@ -50,7 +50,8 @@
     ; unless( overload::Method($node,'""') )
         { Carp::croak("To string operator is not overloaded for root node.")
         } 
-    ; $obj->_root = $node
+    # lvalue not used because -d:DProf bug
+    ; $obj->[__root()] = $node
     ; return $obj	
     }
     
