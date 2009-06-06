@@ -17,7 +17,7 @@
         { my ($self,%args) = @_
         ; while(my ($method,$value)=each(%args))
             { my $access = "_$method" 
-            ; $self->[$self->$access] = $value            	
+            ; $self->[$self->$access] = $value	
             }
         ; return $self
         }
@@ -40,7 +40,7 @@
                            : $obj->[$i]->{$key}
                  }}
     )
-    
+
 ; our %rw_accessor =
     ( '$' => sub { my ($n,$i) = @_
                  ; return sub { my ($obj,$val) = @_
@@ -56,11 +56,11 @@
                          ; return @{$obj->[$i]}
                          }
                      ; if(ref $idx eq 'ARRAY')
-                         { $obj->[$i] = $idx                 # set complete array
+                         { $obj->[$i] = $idx  # set complete array
                          ; return $obj
                          }
                        else
-                         { if(@_==3)                         
+                         { if(@_==3)
                              { if($idx eq '<')
                                  { push @{$obj->[$i]}, $val
                                  }
@@ -68,12 +68,12 @@
                                  { unshift @{$obj->[$i]}, $val
                                  }
                                else
-                                 { $obj->[$i]->[$idx] = $val     # set one index
+                                 { $obj->[$i]->[$idx] = $val # set one index
                                  }
                              ; return $obj
                              }
                            else
-                             { return $obj->[$i]->[$idx]     # get one index
+                             { return $obj->[$i]->[$idx] # get one index
                              }
                          }
                  }}
@@ -159,7 +159,7 @@
           { *{"${caller}::${acc}"}=$accessors{$caller}{$acc}
           }
       }
-      
+
     # setup init method
     ; if($init)
         { unless(ref($init) eq 'CODE' )
@@ -200,7 +200,7 @@
     { my ($name,$idx,$type) = @_
     ; return $ro_accessor{$type}->($name,$idx)
     }
-    
+
 ; sub rw
     { my ($name,$idx,$type) = @_
     ; return $rw_accessor{$type}->($name,$idx)
