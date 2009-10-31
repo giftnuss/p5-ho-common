@@ -1,10 +1,8 @@
 Build.PL
 lib/HO.pm
 lib/HO.pod
-lib/HO/accessor.pm
 lib/HO/attr.pm
 lib/HO/attr/autoload.pm
-lib/HO/class.pm
 lib/HO/common.pm
 lib/HO/HTML.pm
 lib/HO/HTML/Document.pm
@@ -26,10 +24,8 @@ README
 t/001_load.t
 t/002_attribute.t
 t/003_structure.t
-t/004_accessor.t
 t/005_overload.t
 t/006_operator.t
-t/007_class.t
 t/008_xml.t
 t/009_node.t
 t/010_html.t

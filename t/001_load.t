@@ -6,7 +6,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 BEGIN { use_ok( 'HO' ); }
 
@@ -36,7 +36,8 @@ ok( overload::Method($object,'""'),"stringify operator is overloaded");
 # restrict further development
 is_deeply(new HO::(),(bless [[],undef],'HO'));
 ok(new HO::()->__thread==0);
-ok(new HO::()->_insert==1);
+ok(new HO::()->__insert==1);
+ok(new HO::()->_insert==2);
 is_deeply(new HO::()->_thread,[]);
 
 
