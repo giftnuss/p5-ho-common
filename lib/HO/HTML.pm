@@ -20,7 +20,7 @@
 # I = Inline Element
 # S = in strict erlaubt
 # D = nur daten erlaubt
-       
+
 ; our @elements = #   L, Function,     A, T, S, B  
     ( 'a'        => [ 0, 'A',          0, 0, 1, 0, ]
     , 'abbr'     => [ 0, 'Abbr',       0, 0, 1, 0, ]
@@ -114,7 +114,7 @@
     , 'ul'       => [ 0, 'Ul',         0, 0, 1, 1, ]
     , 'var'      => [ 0, 'Var',        0, 0, 1, 0, ]
     )
-    
+
 ; our @baseclasses =
     ( 'HO::HTML::element'
     , 'HO::HTML::element::header'
@@ -123,7 +123,7 @@
 ; sub seq_props
     { map { ($_*=2)-1 } 1..($#elements+1)/2
     }
-    
+
 ; sub list_names
     { map { $elements[$_*2] } 0..($#elements-1)/2
     }
@@ -143,7 +143,7 @@
   { my ($pkg,@args)=@_
   ; our @elements
   ; local $_
-	
+
   # create only a subset of tags
   ; for (0,2)
       { if(defined($args[$_]) && $args[$_] eq 'tags')
@@ -156,7 +156,7 @@
   ; unless(grep { $elements[$_]->[0] } seq_props())
       { $pkg->create_tags($pkg->list_names)
       }
-      
+
   ; { local @EXPORT
     ; if(@args && $args[0] eq 'functional')
       { #local @EXPORT
@@ -173,7 +173,7 @@
       }
     }
   }
-  
+
 ; sub create_tags
     { my ($pkg,@tags) = @_
     ; our @elements
@@ -192,31 +192,29 @@
     }
 
 ; my $default_init
-    
+
 ; sub create_a_tag
     { my ($pkg,$idx) = @_
     ; our (@elements,@baseclasses,@inits)
     ; my $p = $idx+1
-    
+
     ; my $codegain = $inits[$elements[$p]->[2]]
 
     ; HO::class::make_subclass
-	    ( of => [ $baseclasses[ $elements[$p]->[2] ] ]
-	    , shortcut_in  => 'HO::HTML'
-	    , name         => $elements[$idx]
-	    , shortcut     => $elements[$p]->[1]
-	    , codegen      => $codegain
-	        ->( $elements[$p]->[3], # is_singletag
-		       , $elements[$idx]
-		       )
-       )
+        ( of => [ $baseclasses[ $elements[$p]->[2] ] ]
+        , shortcut_in  => 'HO::HTML'
+        , name         => $elements[$idx]
+        , shortcut     => $elements[$p]->[1]
+        , codegen      => $codegain->( $elements[$p]->[3], # is_singletag
+                                     , $elements[$idx])
+        )
     }
 
 ; $default_init = sub
     { my ($single,$name) = @_
     ; return sub
         { return sprintf(<<'__PERL__',$single,$name)
-	      
+
 ; sub init 
       { my ($self,@args)=@_
       ; $self->_is_single_tag = %d
@@ -227,18 +225,18 @@ __PERL__
 
         }
     }
-    
+
 ; my $header_init = sub
     { my ($single,$name)=@_
     ; return sub
         { return sprintf(<<'__PERL__',$single,$name)
-        
+
 ; sub init
       { my ($self,@args)=@_
       ; $self->_is_single_tag = %d
       ; $self->insert("%s",@args)
-            
-      ; my $level = $self->default_level           
+
+      ; my $level = $self->default_level
       ; $self->level($level)
       }
 
@@ -275,13 +273,11 @@ HO::HTML
 
    * import functional for subclasses does not work
 
-    
 ; sub _make_tags
   { my $baseclass = caller(0)
   ; my %args = @_
   ; my @tags = @{$args{'tags'}}
-  ; push @TAGS,@tags
-	
+  ; push @TAGS,@tags	
   ; foreach my $tag (@tags)
       { HO::class::make_subclass
 	    ( of => [ $baseclass ]
