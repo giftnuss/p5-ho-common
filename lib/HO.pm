@@ -66,7 +66,7 @@
         }
     ; return wantarray ? @copy : defined($arg) ? \@copy : $copy[0] 
     }
-    
+
 # this helps to overwrite copy
 ; sub duplicate
     { my ($obj,$duplicate) = @_
@@ -105,7 +105,7 @@
         { require Carp
         ; Carp::croak "illegal operator $_[3]." 
         }
-  
+
 ; 1 ;
 
 __END__
