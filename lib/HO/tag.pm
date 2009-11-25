@@ -4,11 +4,11 @@
 ; our $VERSION='0.01'
 # *******************
 ; use strict; use warnings
-  
+
 ; sub _tag : lvalue
     { $_[0]->_thread->[0] 
     }
-    
+
 ; sub tag
     { my ($self,$val) = @_
     ; if(defined($val))
@@ -38,9 +38,9 @@
 
 ; sub _single_tag
     { my ($tag,@thread)=$_[0]->content
-	  
+
     ; my $r = $_[0]->_begin_tag . $_[0]->_tag . $_[0]->attributes_string . $_[0]->_close_stag
-	  
+
     ;    $r .= ref($_) ? "$_" : $_ foreach @thread
     ; return $r
     }
