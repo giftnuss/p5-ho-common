@@ -54,7 +54,7 @@
     ; $obj->[__root()] = $node
     ; return $obj	
     }
-    
+
 ; sub get_root
     { my ($obj) = @_
     ; return $obj->_root
@@ -64,7 +64,7 @@
     { my ($self) = @_
     ; return "".$self->_root
     }
-    
+
 ; sub fill ($$@)
     { my ($obj,$key,@args) = @_
     ; $obj->_areas->{$key}->insert(@args)
