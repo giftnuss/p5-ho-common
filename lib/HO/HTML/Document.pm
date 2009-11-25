@@ -46,7 +46,7 @@
 
     ; $self
     }
-    
+
 ; our %DOCTYPE =
     ( html2 => 
     '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">'
