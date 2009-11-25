@@ -19,27 +19,7 @@
 ; sub is_single_tag 
     { return $_[0]->_is_single_tag
     }
-    
-################################################
-# testing is a mess without ordered attributes
-################################################
-; our @ATTRIB = qw/id title class style/
 
-; sub attributes_string
-    { my ($self) = @_
-    ; my $r    = ""
-    ; my %attr = %{$self->_attributes}
-    
-    ; foreach my $key (@ATTRIB)
-        { if($self->has_attribute($key))
-            { $r .= $self->write_attribute($key,delete($attr{$key}))
-            }
-        }
-    ; foreach my $key (keys %attr)
-        { $r .= $self->write_attribute($key,$attr{$key})
-        }
-    ; return $r
-    }
 
 ; package HO::HTML::element::header
 # *********************************
@@ -62,4 +42,3 @@
 __END__
 
 
-    
