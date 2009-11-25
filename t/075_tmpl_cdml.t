@@ -26,7 +26,7 @@
 
 ; is("".Cdml->portal({name => 'RechnungsNr'},'123')
     ,'[FMP-Portal: RechnungsNr]123[/FMP-Portal]')
-    
+
 ; is("".Cdml->field(name => 'fld'),'[FMP-Field: fld, Raw]')
 ; is("".Cdml->field(name => 'fld', encode => 'HTML'),'[FMP-Field: fld, HTML]')
 
