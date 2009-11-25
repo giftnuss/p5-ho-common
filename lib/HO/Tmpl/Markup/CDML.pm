@@ -5,7 +5,7 @@
 ; use strict; use warnings; use utf8
 ; no warnings "void"
 
-; require Carp
+; use Carp ()
 
 # Nicht übertragene Features der alten CDML Klasse
 # - nachträgliches Ändern des Encoding
@@ -41,7 +41,7 @@
         { Carp::croak "CDML: Invalid tag '$tag' in method current." })
     ; return $baseclasses[0]->new($name)
     }
-    
+
 # FIXME: Die Dokumentation  von CDML ist nicht ganz klar
 ; sub token
     { my ($self,%args) = @_
@@ -50,26 +50,26 @@
     ; my $name = "CurrentToken" . ($id ? ": $id, $enc" : ": $enc")
     ; return $baseclasses[0]->new($name)
     }
-    
+
 ; sub recordset
     { my ($self,@args) = @_
     ; return $baseclasses[1]->new('Record',@args)
     }
-    
+
 ; sub portal
     { my ($self,$opts,@args) = @_
     ; my $name = $opts->{'name'} || Carp::croak "CDML: No name specified for portal."
     ; my $markup = $baseclasses[1]->new('Portal',@args)
     ; return $markup->set_tag_param($name)
     }
-    
+
 ; sub field
     { my ($self,%args) = @_
     ; my $name = $args{'name'} || Carp::croak "CDML: No name specified for a field."
     ; my $enc  = $args{'encode'} || 'Raw'
     ; return $baseclasses[0]->new(sprintf("%s: %s, %s",'Field',$name,$enc))
     }
-    
+
 ; our %client = 
     ( address  => 'Address'
     , ip       => 'IP'
@@ -77,18 +77,18 @@
     , username => 'UserName'
     , password => 'Password'
     )
-    
+
 ; sub client
     { my ($self,$info) = @_
     ; $info = $client{lc($info)} || Carp::croak "CDML: Unknown client info type '$info'."
     ; return $baseclasses[0]->new("Client$info")
     }
-    
+
 ; sub choice
     { my ($self,@args) = @_
     ; return $baseclasses[2]->new(@args)
     }
-    
+
 ; package HO::Tmpl::Markup::CDML::element
 # ***************************************
 ; our $VERSION='0.03'
