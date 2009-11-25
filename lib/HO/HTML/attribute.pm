@@ -14,7 +14,7 @@
         { return $self->get_attribute('style')
         }
     }
-    
+
 ; sub class
     { my ($self,@args) = @_
     ; if(@args)
@@ -26,7 +26,28 @@
         { return $self->get_attribute('class')
         }
     }
-    
+
+################################################
+# testing is a mess without ordered attributes
+################################################
+; our @ATTRIB = qw/id title class style/
+
+; sub attributes_string
+    { my ($self) = @_
+    ; my $r    = ""
+    ; my %attr = %{$self->_attributes}
+
+    ; foreach my $key (@ATTRIB)
+        { if($self->has_attribute($key))
+            { $r .= $self->write_attribute($key,delete($attr{$key}))
+            }
+        }
+    ; foreach my $key (keys %attr)
+        { $r .= $self->write_attribute($key,$attr{$key})
+        }
+    ; return $r
+    }
+
 ; 1
 
 __END__
