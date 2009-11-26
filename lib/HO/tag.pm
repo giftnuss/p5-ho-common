@@ -1,12 +1,22 @@
   package HO::tag
 # ***************
 ; use base 'HO::attr'
-; our $VERSION='0.01'
+; our $VERSION='0.02'
 # *******************
 ; use strict; use warnings
 
+; use HO::class
+    _method => string => sub
+        { if( $_[0]->is_single_tag )
+            { return $_[0]->_single_tag
+            }
+          else
+            { return $_[0]->_double_tag
+            }
+        }
+
 ; sub _tag : lvalue
-    { $_[0]->_thread->[0] 
+    { $_[0]->_thread->[0]
     }
 
 ; sub tag
@@ -26,18 +36,11 @@
 ; sub _begin_endtag () { '</'  } # inline
 
 ; sub is_single_tag
-    { return $_[0]->count <= 1
-    }
-
-; sub string
-    { if( $_[0]->is_single_tag )
-        { return $_[0]->_single_tag }
-      else
-        { return $_[0]->_double_tag }
+    { return $_[0]->count < 1
     }
 
 ; sub _single_tag
-    { my ($tag,@thread)=$_[0]->content
+    { my ($tag,@thread) = @{$_[0]->_thread}
 
     ; my $r = $_[0]->_begin_tag . $_[0]->_tag . $_[0]->attributes_string . $_[0]->_close_stag
 
@@ -46,21 +49,31 @@
     }
 
 ; sub _double_tag
-    { my ($tag,@thread)=$_[0]->content
+    { my ($tag,@thread) = @{$_[0]->_thread}
 
     ; my $r = $_[0]->_begin_tag . $_[0]->_tag . $_[0]->attributes_string() . $_[0]->_close_tag
 
-    ; $r .= ref($_) ? "$_" : $_ foreach @thread
+    ; $r .= ref($_) ? "$_" : $_ foreach grep { defined } @thread
 
     ; $r .= $_[0]->_begin_endtag . $_[0]->_tag . $_[0]->_close_tag
     ; return $r
     }
 
 # overwritten methods
+; sub content
+    { my ($tag,@content) = @{$_[0]->_thread}
+    ; return @content
+    }
+
 ; sub replace
     { my ($self,@args)  = @_
-    ; @{$_[0]->_thread} = ($_[0]->_tag,@args)
+    ; @{$_[0]->_thread} = ($_[0]->_tag)
+    ; $_[0]->insert(@args)
     }
+
+; sub count
+   { return @{$_[0]->_thread} - 1
+   }
 
 ; 1
 
@@ -69,7 +82,7 @@ __END__
 =head1 NAME
 
 HO::tag
-  
+
 =head1 SYNOPSIS
 
 ...

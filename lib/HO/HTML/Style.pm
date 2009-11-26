@@ -4,7 +4,7 @@
 # *******************
 ; use strict; use warnings
 
-; use HO::HTML functional => [qw/Link Style/]
+; use HO::HTML functional => [qw/Link/]
 
 ; sub Stylefile
     { my (%args)= @_
@@ -16,51 +16,26 @@
     ; return $link
     }
 
+; sub Style
+    { HO::HTML::Style(@_)->type('text/css')
+    }
+
 ; 1
 
 __END__
 
-; use HO::Tag
-; use HO::Exporter
-; use base ('HO::Tag','HO::Exporter')
+=head1 NAME
 
-; our $VERSION='0.021'
-; our @EXPORT
+HO::HTML::Style
 
-; sub import
-  { my $class=shift
-  ; my %p=( namespace => '', functional => 0, @_)
-  ; my $ns=$p{namespace}; $ns.='::' if $ns
-   
-  ; my $t='Style'
-  ; my $pack=$ns.$t
-  ; $class->create_tag($pack,$class,lc $t)
-  ; $class->register( \@EXPORT, $t, $pack ) if $p{functional}
-  }
-  
-; sub new
-  { my $class=shift
-  ; $class->SUPER::new(shift(),"\n",@_)->type("text/css")
-  }
-  
-; sub Style
-  { __PACKAGE__->new('style',@_)
-  }
+=head1 SYNOPSIS
 
-; sub src
-  { my $obj=shift
-  ; $obj->_thread->[0]="link"
-  ; $obj->href(shift)->rel('stylesheet')
-  ; splice(@{$obj->_thread},1,1);
-  ; $obj
-  }
-  
-; sub get
-  { my $self=shift
-  ; if( exists $self->_attributes->{'href'} )
-     { return (bless $self, 'HO::Tag::Double')->get() }
-    else
-     { return (bless $self, 'HO::Tag::Double')->get() }
-  }
-  
-; 1
+    import from 'HO::HTML::Style' => qw/Stylefile Style/;
+
+    Stylefile(src => '/css/core.css'); # media screen is default
+    Style(<<__CSS__);
+    h1 { font-size: 90pt; }
+    __CSS__
+
+=head1 DESCRIPTION
+

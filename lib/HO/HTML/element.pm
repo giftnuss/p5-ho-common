@@ -16,7 +16,7 @@
 
 ; sub _close_stag   () { ' >' } # inline
 
-; sub is_single_tag 
+; sub is_single_tag
     { return $_[0]->_is_single_tag
     }
 
@@ -29,8 +29,8 @@
 ; use base ('HO::HTML::element')
 
 ; use HO::class
-    _rw => level => '$' 
-    
+    _rw => level => '$'
+
 ; sub default_level
     { my ($self) = @_
     ; return undef unless $self->_tag

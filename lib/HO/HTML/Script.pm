@@ -21,19 +21,23 @@
         }
     ; my $tag = Script()
     ; $tag->type($opts->{'type'}) if $opts->{'type'}
-    
+
     ; unless($opts->{'nocomment'})
         { my $node = node(@args)
         ; $tag << "<!--//" << newline() << $node << newline() << "//-->" 
         ; $tag->insertpoint($node)
         }
+      else
+        { $tag << node(@args)
+        }
+
     ; return $tag
     }
-    
+
 ; sub JavascriptNC
     { my (@args) = @_
     ; my $opts = {}
-    ; $opts = shift @args if(ref $args[0] eq 'HASH')
+    ; $opts = shift @args if ref $args[0] eq 'HASH'
     ; $opts->{'nocomment'} = 1
     ; unshift @args, $opts
     ; return Javascript(@args)

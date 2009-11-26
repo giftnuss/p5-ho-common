@@ -1,45 +1,51 @@
 ; package HO::print
 
-; our $VERSION='0.02'
+; our $VERSION='0.03'
 
 ; use HO
 
 ; package HO
 
-; use Carp
-; use File::Path
-; use File::Basename
+; use SelectSaver    ()
+; use Carp           ()
+; use File::Path     ()
+; use File::Basename ()
 
-; sub print
-    { print "$_[0]" }
+; sub print { print "$_[0]" }
 
 ; sub print_into
     { my ($obj,$file)=@_
-    ; $dir=dirname($file);
-    ; mkpath $dir if not -d $dir
+    ; $dir=File::Basename::dirname($file);
+    ; File::Path::mkpath $dir if not -d $dir
+
     ; eval
         { open TARGET,">$file" or die "$^E"
-        ; my $old=select TARGET
+        ; my $save = new SelectSaver(TARGET)
         ; $obj->print
         ; close TARGET or die "$^E"
-        ; select $old;
         }
-    ; croak "Something is wrong with print_into file $file!\n$@" if $@;
-    ; return 1
+    ; Carp::croak
+        ("Something is wrong with print_into file $file!\n$@")
+        if $@;
+
+    ; return $obj
     }
 
 ; sub print_utf8_into
     { my ($obj,$file)=@_
-    ; $dir=dirname($file);
-    ; mkpath $dir if not -d $dir
+    ; $dir=File::Basename::dirname($file);
+    ; File::Path::mkpath $dir if not -d $dir
     ; eval
         { open TARGET,">:utf8","$file" or die "$^E"
-        ; my $old=select TARGET
+        ; my $save = new SelectSaver(TARGET)
         ; $obj->print
         ; close TARGET or die "$^E"
-        ; select $old;
         }
-    ; carp "Something is wrong with print_utf8_into file $file!\n$@" if $@;
+    ; Carp::carp
+        ("Something is wrong with print_utf8_into file $file!\n$@") 
+        if $@;
+        
+    ; return $obj
     }
 
 ; 1

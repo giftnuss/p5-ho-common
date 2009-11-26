@@ -4,7 +4,6 @@
 ; our $VERSION=$HO::VERSION
 # *************************
 ; use strict
-; require Carp 
 
 ; use HO::class
     _lvalue => _attributes => '%'
@@ -39,6 +38,12 @@
     ; $obj
     }
 
+; sub set_attributes_hashref
+    { my ($obj,$attr)=@_
+    ; $obj->set_attribute($_,$attr->{$_}) for keys %$attr
+    ; $obj
+    }
+
 ; sub attributes_string
     { my ($self) = @_
     ; my $r    = ""
@@ -48,7 +53,7 @@
         }
     ; return $r
     }
-    
+
 ; sub write_attribute
     { my ($self,$key,$value) = @_
     ; return defined($value) ? sprintf(" %s=\"%s\"",$key,$value)
@@ -81,11 +86,9 @@ Extends the HO class with a attribute hash.
   # get the attributes as string
   my $str=$foo->attributes_string
   # something like 'id="xyz" nerves="more than one" key="1" value="0"'
-  # note that the order may vary  
+  # note that the order may vary
 
 =head1 DESCRIPTION
 
 Adds a storage for key value pairs and the needed methods to manipulate
 and retrieve them to your class.
-
- 

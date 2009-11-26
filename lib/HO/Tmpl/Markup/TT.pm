@@ -10,13 +10,6 @@
 ; use HO::common qw/node/
 ; use HO::class
 
-; our @baseclasses =
-    ( 'HO::Tmpl::Markup::TT::element::single'
-    , 'HO::Tmpl::Markup::TT::element::double'
-    , 'HO::Tmpl::Markup::TT::element::choice'
-    , 'HO::Tmpl::Markup::TT::element::valuelist'
-    )
-
 ; sub AUTOLOAD
     { our $AUTOLOAD
     ; warn $AUTOLOAD
@@ -52,17 +45,16 @@
 
 
 
-
 ; package HO::Tmpl::Markup::TT::element
 # *************************************
 ; our $VERSION='0.01'
 # *******************
 ; use base 'HO::tag'
 
-; sub _begin_tag    () { '[% ' } # inline
-; sub _close_tag    () { ' %]' } # inline
-; sub _close_stag   () { ' %]' } # inline
-; sub _begin_endtag () { '[% ' } # inline
+; sub _begin_tag    () { '[% ' }
+; sub _close_tag    () { ' %]' }
+; sub _close_stag   () { ' %]' }
+; sub _begin_endtag () { '[% ' }
 
 ; sub set_tag_param
     { my ($self,$param) = @_
@@ -92,8 +84,8 @@
 
 ; package HO::Tmpl::Markup::TT::element::double
 # *********************************************
-; our $VERSION=$HO::Tmpl::Markup::TT::element::VERSION
-# ******************************************************
+; our $VERSION = '0.01'
+# *********************
 ; use base 'HO::Tmpl::Markup::TT::element'
 
 ; sub is_single_tag () { 0 }
@@ -101,7 +93,7 @@
 ; package HO::Tmpl::Markup::TT::element::DATA
 # ********************************************
 ; our $VERSION = '0.01'
-# **********************
+# *********************
 ; use base 'HO::Tmpl::Markup::TT::element::single'
 ; use HO::class
     _rw => argstr => '$'
@@ -139,7 +131,7 @@
 ; use base 'HO::Tmpl::Markup::TT::element::single'
 
 ; sub string
-    { my ($tag,@thread) = $_[0]->content
+    { my ($tag,@thread) = @{$_[0]->_thread}
 
     ; my $r = $_[0]->_begin_tag . $_[0]->_tag . ' = ' . shift @thread
     ; while(@thread) 

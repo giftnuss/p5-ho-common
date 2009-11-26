@@ -19,19 +19,21 @@
     ( 'HO::Tmpl::Markup::CDML::element::single'
     , 'HO::Tmpl::Markup::CDML::element::double'
     , 'HO::Tmpl::Markup::CDML::element::choice'
+    , 'HO::Tmpl::Markup::CDML::element::valuelist'
     )
 
 ; our %current =
-    ( date        => 'Date'         # Aktuelles Datum
+    ( action      => 'Action'       # Zuletzt ausgeführte Datenbank Aktion
+    , datasource  => 'Database'     # meist das gleiche wie ein DB-Table/Domain
+    , date        => 'Date'         # Aktuelles Datum
     , error       => 'Error'        # Fehlercode der letzten Aktion
     , foundcount  => 'FoundCount'   # Aktuell aufgerufene Datensätze
+    , layout      => 'Layout'       # eine beschränkte Auswahl von Feldern
     , recid       => 'RecID'        # System interne Record ID
     , recpos      => 'RecordNumber' # Aktuelle Position in der Auswahl
     , recordcount => 'RecordCount'  # Anzahl der vorhandenen Records
     , skip        => 'Skip'         # Wieviele Datensätze der Auswahl auslassen
-    , action      => 'Action'       # Zuletzt ausgeführte Datenbank Aktion
-    , datasource  => 'Database'     # meist das gleiche wie ein DB-Table/Domain
-    , layout      => 'Layout'       # eine beschränkte Auswahl von Feldern
+    , time        => 'Time'         # Aktuelle Uhrzeit
     )
 
 ; sub current
@@ -87,6 +89,31 @@
 ; sub choice
     { my ($self,@args) = @_
     ; return $baseclasses[2]->new(@args)
+    }
+
+; sub valuelist
+    { my ($self,$opts,@args) = @_
+    ; my $field = $opts->{'field'}
+        || Carp::croak "CDML: No field specified for valuelist."
+    ; my $listname = $opts->{'listname'}
+
+    ; my $markup = $baseclasses[3]->new('ValueList',@args)
+    ; $markup->set_field($field)
+    ; $markup->set_listname($listname) if $listname
+
+    ; return $markup
+    }
+
+; sub valuelistitem
+    { return $baseclasses[0]->new('ValueListItem')    
+    }
+
+; sub valuelistchecked
+    { return $baseclasses[0]->new('ValueListChecked')
+    }
+
+; sub inlineaction
+    { return new HO::('[FMP-InlineAction]IA - is a todo.[/FMP-InlineAction]')
     }
 
 ; package HO::Tmpl::Markup::CDML::element
@@ -146,7 +173,7 @@
     ; push @{$self->_thread}, @args
     ; return $self
     }
-    
+
 ; sub set_default_choice
     { my ($self,$else) = @_
     ; if($self->has_attribute('default'))
@@ -157,30 +184,30 @@
         }
     ; return $self
     }
-    
+
 ; sub init
     { my ($self,@args) = @_
     ; my $class = ref $self
 
     ; my $idx = HO::accessor::_value_of($class,"_insert")
     ; $self->[$idx] = $custom_insert
-     
+
     ; return $self->insert(@args)
     }
 
 ; sub string
     { my $self=shift
     ; my $r   = ""
-    ; my @list = $self->content
+    ; my @list = @{$self->_thread}
     ; my ($c,$i) = splice(@list,0,2)
-    
+
     ; $r .= $self->_begin_tag . 'If: ' . $c . $self->_close_tag . $i
-    
+
     ; while(@list)
         { ($c,$i) = splice(@list,0,2)
         ; $r .=  $self->_begin_tag . 'ElseIf: ' . $c . $self->_close_tag . $i
         }
-        
+
     ; if($self->has_attribute('default'))
         { $r .= $self->_begin_tag . 'Else' . $self->_close_tag 
               . $self->get_attribute('default')
@@ -189,7 +216,31 @@
     ; $r .= $self->_begin_endtag . 'If' . $self->_close_tag 
     ; return $r
     }
-    
+
+; package HO::Tmpl::Markup::CDML::element::valuelist
+# **************************************************
+; our $VERSION='0.01'
+# *******************
+; use base 'HO::Tmpl::Markup::CDML::element::double'
+
+; sub set_field
+    { my ($self,$field) = @_
+    ; return $self->set_attribute('field' => $field)
+    }
+
+; sub set_listname
+    { my ($self,$listname) = @_
+    ; return $self->set_attribute('listname' => $listname)
+    }
+
+; sub attributes_string
+    { my ($self) = @_
+    ; my $field  = $self->get_attribute('field')
+    ; my $list   = $self->get_attribute('listname')
+
+    ; return ": $field" . ($list ? ", List=$list" : '')
+    }
+
 __END__
 
 

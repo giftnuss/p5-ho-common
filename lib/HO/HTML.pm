@@ -4,8 +4,9 @@
 # *******************
 
 ; use strict; use warnings; use utf8
+; use Carp ()
 
-; require Exporter  
+; require Exporter
 ; our @ISA = ('Exporter')
 ; our (@EXPORT_OK,@EXPORT)
 
@@ -21,7 +22,7 @@
 # S = in strict erlaubt
 # D = nur daten erlaubt
 
-; our @elements = #   L, Function,     A, T, S, B  
+; our @elements = #   L, Function,     A, T, S, B
     ( 'a'        => [ 0, 'A',          0, 0, 1, 0, ]
     , 'abbr'     => [ 0, 'Abbr',       0, 0, 1, 0, ]
     , 'acronym'  => [ 0, 'Acronym',    0, 0, 1, 0, ]
@@ -59,10 +60,10 @@
     , 'h1'       => [ 0, 'H1',         1, 0, 1, 1, ]
     , 'h2'       => [ 0, 'H2',         1, 0, 1, 1, ]
     , 'h3'       => [ 0, 'H3',         1, 0, 1, 1, ]
-    , 'h4'       => [ 0, 'H4',         1, 0, 1, 1, ] 
-    , 'h5'       => [ 0, 'H5',         1, 0, 1, 1, ] 
+    , 'h4'       => [ 0, 'H4',         1, 0, 1, 1, ]
+    , 'h5'       => [ 0, 'H5',         1, 0, 1, 1, ]
     , 'h6'       => [ 0, 'H6',         1, 0, 1, 1, ]
-    , 'head'     => [ 0, 'Head',       0, 0, 1, 0, ] 
+    , 'head'     => [ 0, 'Head',       0, 0, 1, 0, ]
     , 'hr'       => [ 0, 'Hr',         0, 1, 1, 1, ]
     , 'html'     => [ 0, 'Html',       0, 0, 1, 0, ]
     , 'i'        => [ 0, 'Italic',     0, 0, 1, 0, ]
@@ -215,7 +216,7 @@
     ; return sub
         { return sprintf(<<'__PERL__',$single,$name)
 
-; sub init 
+; sub init
       { my ($self,@args)=@_
       ; $self->_is_single_tag = %d
       ; $self->insert("%s",@args)
@@ -253,13 +254,39 @@ __PERL__
 # needs many fixes for more header elements
 ; sub H
     { my ($level,@args) = @_
-    ; (($level ||= 1) && $level>0 && $level<7) or 
+    ; (($level ||= 1) && $level>0 && $level<7) or
         do { unshift @args, $level; $level=1 }
     ; if(my $header = HO::HTML->can('H'.$level))
         { return &$header(@args)
         }
     ; Carp::croak "Header element class 'h$level' not initialized."
     }
+
+#############################
+# Factory
+#############################
+; sub factory
+    { my $tagname = shift
+    ; return html_element($tagname)->(@_)
+    }
+
+; sub html_element
+    { my ($tagname) = @_
+    ; our @elements
+    ; my %elements = @elements
+
+    ; my $def = $elements{lc($tagname)}
+        or Carp::croak("Unknown tag '$tagname'.")
+
+    ; my $func = HO::HTML->can($def->[1])
+        or Carp::croak("Undefined function HO::HTML::" . $def->[1]. ".")
+
+    ; return $func
+    }
+
+; use Memoize
+; memoize('html_element')
+; no Memoize
 
 ; 1
 
@@ -272,68 +299,3 @@ HO::HTML
 =head1 BUGS
 
    * import functional for subclasses does not work
-
-; sub _make_tags
-  { my $baseclass = caller(0)
-  ; my %args = @_
-  ; my @tags = @{$args{'tags'}}
-  ; push @TAGS,@tags	
-  ; foreach my $tag (@tags)
-      { HO::class::make_subclass
-	    ( of => [ $baseclass ]
-	    , shortcut_in  => 'HO::HTML'
-	    , name         => $tag
-	    , codegen      => $args{'codegen'}
-      )}
-  }
-  
-; package HO::HTML::Double
-; use base qw/HO::tag HO::attr::autoload HO::insertpoint/
-  
-; our @TAGS = qw
-  ( Html Head Title Body
-    A Big Div P Pre Small Span Sub Sup
-    Caption Colgroup Col Table Thead Tbody Tfoot Tr Th Td
-    Ol Ul Li Dl Dd Dt
-    Blockquote Q
-    Button Fieldset Form Label Legend Option Select Textarea 
-  )
-  
-; sub create_tags
-  { HO::HTML::_make_tags
-    ( tags    => $_[1]
-    , codegen => sub 
-        { my %args = @_; return sprintf <<'__PERL__'
-	      
-  sub init 
-      { my ($self,@args)=@_
-      ; $self->_is_single_tag(0)
-      ; $self->insert("%s",@args)
-      }
-
-__PERL__
-	, lc($args{'name'})
-	}
-    )
-  }
-
-; __PACKAGE__->create_tags(\@TAGS)
-  
-; package HO::HTML::Single
-; use base qw/HO::tag HO::attr::autoload HO::insertpoint/
-  
-; our @TAGS = qw(Br Hr Img Input)
-
-; sub _close_stag   () { ' >' } # inline
-
-; HO::HTML::_make_tags(tags => \@TAGS
-    , codegen =>
-        sub { my %args = @_
-	    ; 'sub init {my ($self,@args)=@_'
-	     .';$self->_is_single_tag(1)'
-	     .';$self->insert("'.lc($args{'name'}).'",@args)}'
-	    }
-    )
-
-; 1
-

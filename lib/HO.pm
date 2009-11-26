@@ -1,7 +1,7 @@
   package HO
 # ==========
 ; use strict
-; our $VERSION='0.61'
+; our $VERSION='0.62'
 # ===================
 
 # this way HO::class knows that there is a init method
@@ -15,18 +15,35 @@
        { my $self = shift
        ; push @{$self->_thread}, map { ref eq 'ARRAY' ? new HO(@$_) : $_ } @_
        ; $self
+       },
+
+    _method   => string   => sub
+       { my $self = shift
+       ; return join("",$self->content)
        }
 
-; sub init
-    { return shift->insert( @_ ) }
+; use overload
+    '<<'     => "insert",
+    '**'     => "insert",
+    '""'     => "string",
+    '+'      => "concat",
+    '*'      => "copy",
+    'bool'   => sub{ 1 },
+    fallback => 1,
+    nomethod => sub 
+        { require Carp
+        ; Carp::croak "illegal operator $_[3]." 
+        }
 
+; sub init
+    { return shift->insert( @_ )
+    }
 
 ; sub replace
     { my $self = shift
     ; @{$self->_thread}=()
     ; return $self->insert(@_)
     }
-
 
 ; sub splice
     { my $self = shift
@@ -35,16 +52,9 @@
     ; return CORE::splice(@{$self->_thread},$offset,$length,@_)
     }
 
-
-; sub string
-    { my $self=shift
-    ; return join("",$self->content)
-    }
-
-
+# better return a array ref in scalar context?
 ; sub content
     { return @{$_[0]->_thread} }
-
 
 ; sub concat
     { my ($o1,$o2,$reverse)=@_
@@ -70,6 +80,8 @@
 # this helps to overwrite copy
 ; sub duplicate
     { my ($obj,$duplicate) = @_
+    ; $duplicate ||= ref($obj)->new
+    
     ; my @props = @{$obj}
     ; for my $prop (0..$#props)
         { if(ref $obj->[$prop] eq 'HASH')
@@ -91,20 +103,6 @@
 ; sub count
    { return scalar @{$_[0]->_thread}
    }
-
-
-; use overload
-    '<<'     => "insert",
-    '**'     => "insert",
-    '""'     => "string",
-    '+'      => "concat",
-    '*'      => "copy",
-    'bool'   => sub{ 1 },
-    fallback => 1,
-    nomethod => sub 
-        { require Carp
-        ; Carp::croak "illegal operator $_[3]." 
-        }
 
 ; 1 ;
 

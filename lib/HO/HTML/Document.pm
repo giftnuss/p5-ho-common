@@ -18,7 +18,7 @@
     ; my $doctype   = _doctype($p{'doctype'} || 'transitional')
     ; my $titletext = $p{'title'} || ''
     ; my $metatags  = $p{'metatags'} || []
-    ; my $root      = node() # new HO::HTML::Document::Type
+    ; my $root      = node()
  
     ; my %slot=
         ( head   => HO::HTML::Head()
