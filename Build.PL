@@ -13,6 +13,6 @@ Module::Build->new
       dist_abstract   => 'hierachical (array based) objects',
 
       requires =>
-          { perl => 5.006
+          { perl => 5.008
 	  }
     )->create_build_script;
