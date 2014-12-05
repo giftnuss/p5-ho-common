@@ -10,7 +10,7 @@
 ; use HO::structure
 ; use base 'HO::structure'
 
-; __PACKAGE__->make_slots qw(condition if else)
+; __PACKAGE__->make_slots( qw(condition if else) )
 
 ; sub get { "$_[0]" }
 

@@ -10,7 +10,7 @@
 ; use HO::common qw/node newline/
 ; use HO::HTML
 
-; __PACKAGE__->make_slots qw(head title body meta style script)
+; __PACKAGE__->make_slots( qw(head title body meta style script) )
 
 ; sub new
     { my ($class)=shift
