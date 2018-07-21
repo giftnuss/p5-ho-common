@@ -1,15 +1,16 @@
-  package HO::attr::autoload
-# ++++++++++++++++++++++++++
-; use base 'HO::attr'
-; our $VERSION=$HO::VERSION
-# +++++++++++++++++++++++++
+  package HO::mixin::attributes::autoload
+# +++++++++++++++++++++++++++++++++++++++
+; our $VERSION=0.064
+# ++++++++++++++++++
 ; use strict; use warnings
+
+; use parent 'HO::mixin::attributes'
 ; use Carp ()
 ; our ($AUTOLOAD)
 
 ; DEFDEBUG:
   { no strict 'refs'
-  ; unless( defined *HO::attr::autoload::DEBUG_AUTOLOAD{'CODE'} )
+  ; unless( defined *HO::mixin::attributes::autoload::DEBUG_AUTOLOAD{'CODE'} )
       { sub DEBUG_AUTOLOAD () { 0 }
       }
   }

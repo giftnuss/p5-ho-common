@@ -1,8 +1,7 @@
-  package HO::insertpoint
-#************************
-; require HO
-; require HO::accessor
-; our $VERSION=$HO::VERSION
+  package HO::mixin::insertpoint
+#*******************************
+; use HO::accessor ()
+; our $VERSION=0.030
 #**************************
 
 ; sub insertpoint

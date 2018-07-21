@@ -1,9 +1,13 @@
   package HO::tag
 # ***************
-; use base 'HO::attr'
-; our $VERSION='0.02'
+; our $VERSION='0.03'
 # *******************
 ; use strict; use warnings
+
+; use parent qw/
+    HO::Object
+    HO::mixin::attributes::autoload
+  /
 
 ; use HO::class
     _method => string => sub

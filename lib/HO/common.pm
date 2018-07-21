@@ -20,8 +20,8 @@
 ; sub node { new HO::node(@_) }
 
 ; sub newline
-    { return new HO::("\n") unless @_
-    ; return new HO::("\n",@_,"\n")
+    { return new HO::Object::("\n") unless @_
+    ; return new HO::Object::("\n",@_,"\n")
     }
 
 ; 1

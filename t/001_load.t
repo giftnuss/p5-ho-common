@@ -8,10 +8,10 @@ use warnings;
 
 use Test::More tests => 14;
 
-BEGIN { use_ok( 'HO' ); }
+BEGIN { use_ok( 'HO::Object' ); }
 
-my $object = HO->new ();
-isa_ok ($object, 'HO');
+my $object = HO::Object->new ();
+isa_ok ($object, 'HO::Object');
 
 $object->insert("abc");
 is("$object","abc","simple insert and stringify");
@@ -19,10 +19,10 @@ is("$object","abc","simple insert and stringify");
 $object->replace("cba");
 is("$object","cba","simple replace");
 
-my $second = new HO('jup');
+my $second = new HO::Object::('jup');
 is("$second",'jup','constr with argument');
 
-my $doubled = new HO($object->copy(2));
+my $doubled = new HO::Object::($object->copy(2));
 is("$doubled","cbacba","simple multiply");
 
 ok($doubled->count==2,"count is 2");
@@ -34,10 +34,10 @@ is("$doubled",'gfejkicba','object after splice');
 ok( overload::Method($object,'""'),"stringify operator is overloaded");
 
 # restrict further development
-ok(new HO::()->__thread==0);
-ok(new HO::()->__insert==1);
-ok(new HO::()->_insert==2);
-is_deeply(new HO::()->_thread,[]);
+ok(new HO::Object::()->__thread==0);
+ok(new HO::Object::()->__insert==1);
+ok(new HO::Object::()->_insert==2);
+is_deeply(new HO::Object::()->_thread,[]);
 
 
 

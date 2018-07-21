@@ -1,7 +1,6 @@
-  package HO::attr
-# ****************
-; use base 'HO'
-; our $VERSION=$HO::VERSION
+  package HO::mixin::attributes
+# *****************************
+; our $VERSION=0.062
 # *************************
 ; use strict
 
@@ -66,7 +65,7 @@ __END__
 
 =head1 HO::attr
 
-Extends the HO class with a attribute hash.
+Extends the HO::Object class with a attribute hash.
 
 =head1 SYNOPSIS
 

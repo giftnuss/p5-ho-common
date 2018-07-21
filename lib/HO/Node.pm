@@ -1,11 +1,12 @@
-  package HO::node
+  package HO::Node
 # ****************
-; require HO
-; require HO::insertpoint
-; our $VERSION=$HO::VERSION
-# *************************
+; our $VERSION=0.062
+# ******************
 
-; use base qw/HO HO::insertpoint/
+; use parent qw/
+    HO::Object
+    HO::mixin::insertpoint
+  /
 
 ; 1
 
