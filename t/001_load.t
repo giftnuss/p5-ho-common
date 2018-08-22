@@ -34,10 +34,10 @@ is("$doubled",'gfejkicba','object after splice');
 ok( overload::Method($object,'""'),"stringify operator is overloaded");
 
 # restrict further development
-ok(new HO::Object::()->__thread==0);
-ok(new HO::Object::()->__insert==1);
-ok(new HO::Object::()->_insert==2);
-is_deeply(new HO::Object::()->_thread,[]);
+ok(new HO::Object::()->__thread==0,"internals 1");
+ok(new HO::Object::()->__insert==1,"internals 2");
+ok(new HO::Object::()->_insert==2,"internals 3");
+is_deeply(new HO::Object::()->_thread,[],"internals 4");
 
 
 
