@@ -1,13 +1,14 @@
   package HO::mixin::insertpoint
 #*******************************
 ; use HO::accessor ()
-; our $VERSION=0.030
+; our $VERSION=0.04
 #**************************
+
+; use Package::Subroutine
 
 ; sub insertpoint
     { my ($self,$insertpoint) = @_
-    ; my $class = ref($self) || $self
-    ; my $idx = HO::accessor::_value_of($class,"_insert")
+    ; my $idx = $self->__insert
     ; $self->[$idx] = sub
         { my $self = shift()
         ; $insertpoint->insert(@_)
@@ -27,6 +28,8 @@ HO::insertpoint - mixin with an alternative insert object method
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
+
+
 
 
 

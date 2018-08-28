@@ -4,7 +4,7 @@
 # *******************
 ; use strict; use warnings; no warnings "void"
 
-; use HO::common qw/node newline/
+; use HO::Common qw/node newline/
 ; use HO::HTML functional => [qw/Script/]
 
 ; our @ISA = 'HO::HTML'
@@ -24,7 +24,7 @@
 
     ; unless($opts->{'nocomment'})
         { my $node = node(@args)
-        ; $tag << "<!--//" << newline() << $node << newline() << "//-->" 
+        ; $tag << "<!--//" << newline() << $node << newline() << "//-->"
         ; $tag->insertpoint($node)
         }
       else

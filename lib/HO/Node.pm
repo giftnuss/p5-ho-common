@@ -12,3 +12,6 @@
 
 __END__
 
+TODO: Das sollte eine Fassade werden um verschiedenen Objekten ein
+gemeinsames Interface zu geben.
+

@@ -3,7 +3,8 @@
 ; use strict
 ; our $VERSION='0.62'
 # ===================
-
+; use Data::Dumper
+; use Package::Subroutine
 # this way HO::class knows that there is a init method
 ; use subs qw/init/
 
@@ -13,7 +14,8 @@
 
     _method   => insert   => sub
        { my $self = shift
-       ; push @{$self->_thread}, map { ref eq 'ARRAY' ? new HO(@$_) : $_ } @_
+       ; push @{$self->_thread},
+            map { (ref eq 'ARRAY') ? new HO::Object::(@$_) : $_ } @_
        ; $self
        },
 
@@ -30,9 +32,9 @@
     '*'      => "copy",
     'bool'   => sub{ 1 },
     fallback => 1,
-    nomethod => sub 
+    nomethod => sub
         { require Carp
-        ; Carp::croak "illegal operator $_[3]." 
+        ; Carp::croak "illegal operator $_[3]."
         }
 
 ; sub init
@@ -54,12 +56,13 @@
 
 # better return a array ref in scalar context?
 ; sub content
-    { return @{$_[0]->_thread} }
+    { return @{$_[0]->_thread}
+    }
 
 ; sub concat
     { my ($o1,$o2,$reverse)=@_
     ; ($o2,$o1)=($o1,$o2) if $reverse
-    ; return new HO::($o1,$o2)
+    ; return new HO::Object($o1,$o2)
     }
 
 ; sub copy
@@ -74,14 +77,14 @@
         ; $obj->duplicate($copy)
         ; push @copy,$copy
         }
-    ; return wantarray ? @copy : defined($arg) ? \@copy : $copy[0] 
+    ; return wantarray ? @copy : defined($arg) ? \@copy : $copy[0]
     }
 
 # this helps to overwrite copy
 ; sub duplicate
     { my ($obj,$duplicate) = @_
     ; $duplicate ||= ref($obj)->new
-    
+
     ; my @props = @{$obj}
     ; for my $prop (0..$#props)
         { if(ref $obj->[$prop] eq 'HASH')
@@ -120,33 +123,33 @@ Version 0.61
 
 =head1 SYNOPSIS
 
-   use HO;
+   use HO::Object;
    no warnings 'void';
 
-   my $obj=new HO('text',$other_object);
- 
+   my $obj=new HO::Object::('text',$other_object);
+
    $obj->insert('more text');
    $obj << $another_object ** 'anymore text';
- 
+
    print "$obj";
 
 =head1 DESCRIPTION
 
-C<HO> stands for Hierarchical Objects and plays the role as base class 
-and interface for different extended objects. With this object it 
-is simple to build up a hierarchy by the way to put one object into 
-another and finally create a string from the whole structure. 
+C<HO> stands for Hierarchical Objects and plays the role as base class
+and interface for different extended objects. With this object it
+is simple to build up a hierarchy by the way to put one object into
+another and finally create a string from the whole structure.
 
-This principle is not new and there are similar implementations in the CPAN. 
+This principle is not new and there are similar implementations in the CPAN.
 But this is mine and I hope other programmer found it useful and use it too.
 
 I'm open for any suggestions and each form of constructive criticism. This
 modul was build after a long evolutionary process. First time it grows, than
-it was split, names becomes shorter and finally it was splited into a class 
-hierarchy. Last feature was the dynamic constructor to solve the problem 
-when different sublasses uses the same index for an object property.  
+it was split, names becomes shorter and finally it was splited into a class
+hierarchy. Last feature was the dynamic constructor to solve the problem
+when different sublasses uses the same index for an object property.
 
-Some mothods are changeable on an object. This function is provided by the 
+Some mothods are changeable on an object. This function is provided by the
 HO::class package.
 
 =head2 WARNING
@@ -157,13 +160,13 @@ maybe C<HO::safe> will targeting this issue.
 
 =head2 new and init
 
-The constructor C<new> is created by the L<HO::accessor> module. 
+The constructor C<new> is created by the L<HO::accessor> module.
 This constructor calls the init method. so you have to overwrite
 this in your subclasses and never the constructor. If you do so, almost
 all other methods must be overwritten too.
 
 As argument is everthing allowed what can be stringified. Additional
-an arrayref in the arguments list is dereferenced and the content is 
+an arrayref in the arguments list is dereferenced and the content is
 used as arguments too.
 
 =head2 insert, << or **
@@ -183,7 +186,7 @@ Protected in the sense of c++. Only subclasses should use it.
 
 =head2 replace
 
-In this base class the whole content array is deleted and the arguments are 
+In this base class the whole content array is deleted and the arguments are
 used as new content.
 
 =head2 splice
@@ -205,7 +208,7 @@ Returns the content of _thread as list.
 
 This makes no deep copy. Please use Clonable for this task.
 May have a number as argument and makes so many copies of the
-original. The return value is an array or in scalar context 
+original. The return value is an array or in scalar context
 an arrayref.
 
 =head2 count
@@ -216,12 +219,12 @@ Simply returns the number of child elements in the first level.
 
 =head2 operator <<
 
-	$obj << $other_obj; # or
-	$obj << \@array;    # because a plain Array doesn't work with operator
+    $obj << $other_obj; # or
+    $obj << \@array;    # because a plain Array doesn't work with operator
 
 This makes the code more like c++. Funny thing, which works fine. Only the warning
 is bad, which is produced because the void context. This is could be disabled with:
-  
+
   no warnings 'void'
 
 and you have to do this for each file where this operator is used.
@@ -234,10 +237,9 @@ An object in boolean context is always true.
 
 =head1 AUTHOR
 
-	Sebastian Knapp
-	CPAN ID: SKNPP
-	Computer-Leipzig.com
-	sk@computer-leipzig.com
+    Sebastian Knapp
+    CPAN ID: SKNPP
+    sknpp@cpan.org
 
 =head1 COPYRIGHT
 
@@ -250,7 +252,11 @@ LICENSE file included with this module.
 
 =head1 SEE ALSO
 
-This is something to do.
+=over 4
+
+=item HO::class
+
+=back
 
 =cut
 

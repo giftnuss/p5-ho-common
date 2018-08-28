@@ -8,6 +8,8 @@
 ; use Carp ()
 ; our ($AUTOLOAD)
 
+; use HO::class
+
 ; DEFDEBUG:
   { no strict 'refs'
   ; unless( defined *HO::mixin::attributes::autoload::DEBUG_AUTOLOAD{'CODE'} )
@@ -18,7 +20,7 @@
 ; sub AUTOLOAD : lvalue
     { my $self=shift
     ; Carp::croak "AUTOLOAD ($AUTOLOAD) called without object."
-	  unless ref $self
+      unless ref $self
     ; Carp::carp "AUTOLOAD: ".$AUTOLOAD if DEBUG_AUTOLOAD
     ; $AUTOLOAD =~ s/.*:://
     ; my @arg=@_

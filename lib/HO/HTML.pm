@@ -10,7 +10,13 @@
 ; our @ISA = ('Exporter')
 ; our (@EXPORT_OK,@EXPORT)
 
-; use HO::HTML::element
+; use Package::Subroutine ()
+; use HO::ClassBuilder ()
+
+; use HO::HTML::Element ()
+; use HO::HTML::Element::Heading ()
+
+; use Data::Dumper
 
 # L = loaded
 # Function = Name der Standardfunktion im HO::HTML Namensraum
@@ -117,8 +123,8 @@
     )
 
 ; our @baseclasses =
-    ( 'HO::HTML::element'
-    , 'HO::HTML::element::header'
+    ( 'HO::HTML::Element'
+    , 'HO::HTML::Element::Heading'
     )
 
 ; sub seq_props
@@ -199,54 +205,44 @@
     ; our (@elements,@baseclasses,@inits)
     ; my $p = $idx+1
 
-    ; my $codegain = $inits[$elements[$p]->[2]]
-
-    ; HO::class::make_subclass
-        ( of => [ $baseclasses[ $elements[$p]->[2] ] ]
-        , shortcut_in  => 'HO::HTML'
-        , name         => $elements[$idx]
-        , shortcut     => $elements[$p]->[1]
-        , codegen      => $codegain->( $elements[$p]->[3], # is_singletag
-                                     , $elements[$idx])
+    ; my $builder = HO::ClassBuilder->new
+        ( name => $elements[$idx]
+        , namespace => ['HO','HTML','Element']
+        , version => $VERSION
+        , parents => [ $baseclasses[ $elements[$p]->[2] ] ]
+        , methods =>
+            { init => $inits[$elements[$p]->[2]]->( $elements[$p]->[3], $elements[$idx])
+            }
         )
+    ; $builder->build
+    ; my $class = $builder->get_class_name
+    ; install Package::Subroutine:: __PACKAGE__, $elements[$p]->[1]
+        , sub { $class->new(@_) }
+    ; 1
     }
 
-; $default_init = sub
-    { my ($single,$name) = @_
-    ; return sub
-        { return sprintf(<<'__PERL__',$single,$name)
-
-; sub init
-      { my ($self,@args)=@_
-      ; $self->_is_single_tag = %d
-      ; $self->insert("%s",@args)
-      }
-
-__PERL__
-
+; our @inits =
+    ( # default init
+      sub
+        { my ($single,$name) = @_
+        ; return sub
+          { my ($self,@args)=@_
+          ; $self->_is_single_tag = $single
+          ; $self->insert($name,@args)
+          }
         }
-    }
-
-; my $header_init = sub
-    { my ($single,$name)=@_
-    ; return sub
-        { return sprintf(<<'__PERL__',$single,$name)
-
-; sub init
-      { my ($self,@args)=@_
-      ; $self->_is_single_tag = %d
-      ; $self->insert("%s",@args)
-
-      ; my $level = $self->default_level
-      ; $self->level($level)
-      }
-
-__PERL__
-
+    , # heading init
+      sub
+        { my ($single,$name) = @_
+        ; return sub
+          { my ($self,@args) = @_
+          ; $self->_is_single_tag = $single
+          ; $self->insert($name, @args)
+          ; my $level = $self->default_level
+          ; $self->level($level)
+          }
         }
-    }
-
-; our @inits = ($default_init,$header_init)
+    )
 
 #############################
 # Special Functions

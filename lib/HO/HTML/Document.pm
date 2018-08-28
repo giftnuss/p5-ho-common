@@ -7,7 +7,7 @@
 
 ; use base 'HO::structure'
 
-; use HO::common qw/node newline/
+; use HO::Common qw/node newline/
 ; use HO::HTML
 
 ; __PACKAGE__->make_slots( qw(head title body meta style script) )
@@ -19,7 +19,7 @@
     ; my $titletext = $p{'title'} || ''
     ; my $metatags  = $p{'metatags'} || []
     ; my $root      = node()
- 
+
     ; my %slot=
         ( head   => HO::HTML::Head()
         , title  => HO::HTML::Title($titletext)
@@ -48,7 +48,7 @@
     }
 
 ; our %DOCTYPE =
-    ( html2 => 
+    ( html2 =>
     '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">'
     , transitional =>
     '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
@@ -61,7 +61,7 @@
     '<!doctype html>'
     , none => ''
     )
-    
+
 ; sub _doctype
     { shift if $_[0] eq __PACKAGE__
     ; return
@@ -77,7 +77,7 @@
 
 ; sub EnCoding
     { my $self=shift
-    ; my $enc =shift || "ISO-8859-1"
+    ; my $enc =shift || "UTF-8"
     ; $self->meta(
         "<meta http-equiv=\"content-type\" content=\"text/html; charset=${enc}\">\n"
     )

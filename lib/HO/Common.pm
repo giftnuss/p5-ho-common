@@ -1,6 +1,6 @@
-  package HO::common
+  package HO::Common
 # ******************
-; our $VERSION='0.01'
+; our $VERSION='0.02'
 # *******************
 
 ; use strict
@@ -11,13 +11,9 @@
 ; our @EXPORT = ()
 ; our @EXPORT_OK = qw/node newline/
 
-; use HO::node ()
+; use HO::Node ()
 
-# functional constructor alias - future compatible -
-# good for example for learning by doing - it is not a good idea
-# to give it the same name like the class
-
-; sub node { new HO::node(@_) }
+; sub node { new HO::Node::(@_) }
 
 ; sub newline
     { return new HO::Object::("\n") unless @_
@@ -34,10 +30,10 @@ HO::common
 
 =head1 SYNOPSIS
 
-  use HO::common qw/node newline/;
-  
+  use HO::Common qw/node newline/;
+
   my $n = node() << newline();
-  
+
 =head1 DESCRIPTION
 
 This module contains some functions which are useful when you work

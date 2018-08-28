@@ -3,7 +3,7 @@
 
 ; BEGIN { use_ok('HO::Node') }
 
-; my $node = new HO::Node
+; my $node = new HO::Node::
 ; isa_ok($node,'HO::Node')
 
 ; is("$node","")

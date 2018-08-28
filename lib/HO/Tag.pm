@@ -1,4 +1,4 @@
-  package HO::tag
+  package HO::Tag
 # ***************
 ; our $VERSION='0.03'
 # *******************
