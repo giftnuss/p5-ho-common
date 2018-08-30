@@ -5,26 +5,25 @@
 ###############################################################################
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 22;
 
 ################
 # load 2
 ################
-BEGIN { use_ok( 'HO::structure' ); 
-        use_ok( 'HO' );
+BEGIN { use_ok( 'HO::Structure' )
+      ; use_ok( 'HO::Object' )
       };
 
 ################
 # create 1
 ################
-my $structure = new HO::structure;
-isa_ok ($structure, 'HO::structure');
+my $structure = new HO::Structure::;
+isa_ok ($structure, 'HO::Structure');
 
 ################
 # Version 2
 ################
-ok( defined $HO::structure::VERSION , "Version" );
-ok( $HO::structure::VERSION = $HO::VERSION ,"same Version as HO" );
+ok( defined $HO::Structure::VERSION , "Version" );
 
 ################
 # isa 1
@@ -35,17 +34,17 @@ ok(!@HO::structure::ISA,'empty ISA');
 # internals 2
 ################
 diag("is_deeply calls stringify with a empty object, please ignore these warnings here");
-is_deeply(new HO::structure::(),bless [{},undef],'HO::structure');
-is_deeply(new HO::structure::()->_areas,{});
+is_deeply(new HO::Structure::(),bless [{},undef],'HO::Structure');
+is_deeply(new HO::Structure::()->_areas,{});
 
 ################
 # return values 2
 ################
-my @m = (new HO('A'),new HO('B'));
-my $root = new HO(@m);
+my @m = (new HO::Object::('A'),new HO::Object::('B'));
+my $root = new HO::Object::(@m);
 
-isa_ok ($structure->set_root($root), 'HO::structure', 'set_root returns self');
-isa_ok ($structure->set_area('A',$m[0]),'HO::structure', "set_area returns self");
+isa_ok ($structure->set_root($root), 'HO::Structure', 'set_root returns self');
+isa_ok ($structure->set_area('A',$m[0]),'HO::Structure', "set_area returns self");
 $structure->set_area('B',$m[1]);
 
 ################
@@ -53,8 +52,8 @@ $structure->set_area('B',$m[1]);
 ################
 is("$structure","AB",'stringify works');
 
-isa_ok($structure->fill('B','C'),'HO::structure', "fill returns self");
- 
+isa_ok($structure->fill('B','C'),'HO::Structure', "fill returns self");
+
 is("$structure","ABC",'stringify works');
 
 ####################
@@ -62,24 +61,24 @@ is("$structure","ABC",'stringify works');
 ####################
 is($structure->__areas,0,"__areas == 0");
 is($structure->__root,1 ,"__root  == 1");
- 
+
 isa_ok($structure->_areas,"HASH");
-isa_ok($structure->_root,'HO');
+isa_ok($structure->_root,'HO::Object');
 
 ####################
 # Building a simple
 # subclass
 ####################
 eval
-    { package Test::Structure;
+    { package TestMe::Structure;
       no warnings 'void';
-      @Test::Structure::ISA = ('HO::structure');
+      our @ISA = ('HO::Structure');
 
       sub new {
           my $self = shift->SUPER::new;
           my $a = $self->area_setter;
 
-          my @m = new HO()->copy(3);
+          my @m = new HO::Object()->copy(3);
           $m[0] << &$a('A',$m[1]) << &$a('B',$m[2]) << "\n";
 
           return $self->set_root($m[0]);
@@ -91,14 +90,14 @@ eval
 diag($@) if $@;
 ok(!$@);
 
-my $ab = Test::Structure->new;
+my $ab = TestMe::Structure->new;
 
 is($ab->__areas,0,"__areas == 0");
 is($ab->__root,1 ,"__root  == 1");
 
 
 isa_ok($ab->_areas,"HASH");
-isa_ok($ab->_root,'HO');
+isa_ok($ab->_root,'HO::Object');
 
 $ab->A('HAUS')->B('TIER');
 

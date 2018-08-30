@@ -42,7 +42,6 @@
       ; { local $HO::accessor::class = $class
         ; HO::class->import
         }
-      ; # { no strict 'refs'; say Dumper \%{$self->get_class_name . '::'} }
       ; 1
       }
     }

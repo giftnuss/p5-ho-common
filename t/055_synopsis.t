@@ -17,65 +17,63 @@ my $another_object = bless \my $stg,'class::ok';
 
 ###########################################################################
 # Synopsis 2007 v0.61
-   use HO;
+   use HO::Object;
    no warnings 'void';
 
-   my $obj=new HO('text',$other_object);
- 
+   my $obj=new HO::Object:: ('text',$other_object);
+
    $obj->insert('more text');
    $obj << $another_object ** 'anymore text';
- 
+
    is "$obj","textlolmore text_anymore text";
-   
+
 ###########################################################################
 
     package Hello::World::Structure;
-    use base 'HO::structure';
-    
-    Test::More::ok(!@HO::structure::ISA,'empty ISA');
-    
-    use HO;
+    use base 'HO::Structure';
 
-    # basic structure using HO 
-    
+    Test::More::ok(!@HO::Structure::ISA,'empty ISA');
+
+    # basic structure using HO
+
     __PACKAGE__->auto_slots;
-    
+
     { no strict 'refs'
     ; no warnings 'once'
-    ; *get = \&HO::structure::string 
+    ; *get = \&HO::Structure::string
     };
-    
+
     sub new
         { my ($package,@p)=@_
         ; my $self=$package->SUPER::new()
-        
-        ; my ($HW,$hello,$world)=new HO()->copy(3)
-        
+
+        ; my ($HW,$hello,$world)=new HO::Object::()->copy(3)
+
         ; my $area=$self->area_setter()
-        
+
         # use the area closure to define area 'hello'
         ; $HW << &$area('hello',$hello) << " " << $world << "!\n"
-        
+
         # use the api function to set area 'world'
         ; $self->set_area('world',$world)
-        
+
         ; $self->set_root($HW)
         ; $self
         }
-        
+
     # somewhere else
     package main;
-    
+
     # use Hello::World::Structure;
     my $hw=Hello::World::Structure->new();
-    
+
     # use slot to insert content into 'hello'
     $hw->hello('Hallo');
-    
+
     # use api function for the 'world'
     $hw->fill('world','Welt');
-    
+
     # Show what we have build.
     is( $hw->get(), "Hallo Welt!\n");
-    
+
 

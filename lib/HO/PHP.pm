@@ -3,7 +3,7 @@
 ; our $VERSION='0.01'
 # *******************
 ; use strict; use warnings
-; use base ('HO','Exporter')
+; use parent ('HO::Object','Exporter')
 
 ; our @EXPORT
 ; our @EXPORT_OK = ('php')
@@ -14,9 +14,9 @@
 
 ; sub string
     { my $self = shift
-    ; return '<?php ' . join("",$self->content) . ' ?>'    
+    ; return '<?php ' . join("",$self->content) . ' ?>'
     }
-    
+
 ; 1
 
 __END__

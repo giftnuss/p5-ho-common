@@ -5,7 +5,7 @@
 ; use strict; use warnings; use utf8
 ; no warnings 'void'
 
-; use base 'HO::structure'
+; use base 'HO::Structure'
 
 ; use HO::Common qw/node newline/
 ; use HO::HTML

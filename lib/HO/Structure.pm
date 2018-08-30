@@ -1,4 +1,4 @@
-  package HO::structure
+  package HO::Structure
 #**********************
 ; use strict; use warnings
 ; our $VERSION='0.04'
@@ -49,10 +49,10 @@
     { my ($obj,$node)=@_
     ; unless( overload::Method($node,'""') )
         { Carp::croak("To string operator is not overloaded for root node.")
-        } 
+        }
     # lvalue not used because -d:DProf bug
     ; $obj->[__root()] = $node
-    ; return $obj	
+    ; return $obj
     }
 
 ; sub get_root
@@ -91,7 +91,7 @@
               { Carp::carp("The class '${class}' has a method '${slot}', no slot defined.")
               ; next
               }
-          ; *{"${class}::${slot}"} = sub 
+          ; *{"${class}::${slot}"} = sub
               { my ($self,@args) = @_
               ; if(@args)
                   { return $self->fill("${slot}", @args ) }
@@ -109,7 +109,7 @@
 ############################
 ; use overload
     '""'       => "string",
-    'fallback' => 1 
+    'fallback' => 1
 
 ; 1
 
