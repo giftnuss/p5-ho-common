@@ -36,39 +36,22 @@
     ; return $begin.$end
     }
 
-########################
-# Class Methods
-########################
-; my $default_init = sub
-    { my ($name) = @_
-    ; return sub
-        { return sprintf(<<'__PERL__',$name)
-
-; sub init
-      { my ($self,@args)=@_
-      ; $self->insert("%s",@args)
-      }
-
-__PERL__
-
+# ***********************
+#     Class Methods
+# ***********************
+; sub get_class_builder
+    { my ($self, $tag, %args) = @_
+    ; unless(exists $args{'parents'})
+        { $args{'parents'} = ['HO::XML']
         }
+    ; unless(exists $args{'methods'}{'init'})
+        { $args{'methods'}{'init'} = sub
+            { my ($self, @args) = @_
+            ; $self->insert($tag, @args)
+            }
+        }
+    ; return new HO::ClassBuilder:: (%args)
     }
-
-; sub create_tag
-    { my ($self,%opts)=@_
-
-    ; $opts{'name'} || do
-        { Carp::croak("Name is mandatory argument for create_tag") }
-
-    ; $opts{'shortcut'}    ||= ucfirst($opts{'name'})
-    ; $opts{'of'}          ||= [ __PACKAGE__ ]
-    ; $opts{'shortcut_in'} ||= 'HO::XML::functional'
-    ; $opts{'codegen'}     ||= $default_init->($opts{'name'})
-
-    ; HO::class::make_subclass(%opts)
-    }
-
-
 
 ; 1
 

@@ -19,7 +19,8 @@ Module::Build->new
       },
       build_requires => {
           'Test::More' => 0,
-          'Test::Exception' => 0
+          'Test::Exception' => 0,
+          'Package::Subroutine' => 0
       },
       add_to_cleanup      => [ 'HO-common-*' ],
       meta_add => {

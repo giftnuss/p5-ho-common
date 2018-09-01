@@ -215,9 +215,7 @@
             }
         )
     ; $builder->build
-    ; my $class = $builder->get_class_name
-    ; install Package::Subroutine:: __PACKAGE__, $elements[$p]->[1]
-        , sub { $class->new(@_) }
+    ; $builder->make_shortcut(__PACKAGE__, $elements[$p]->[1])
     ; 1
     }
 
@@ -226,7 +224,7 @@
       sub
         { my ($single,$name) = @_
         ; return sub
-          { my ($self,@args)=@_
+          { my ($self,@args) = @_
           ; $self->_is_single_tag = $single
           ; $self->insert($name,@args)
           }

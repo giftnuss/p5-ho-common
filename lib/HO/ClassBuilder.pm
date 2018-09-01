@@ -46,35 +46,37 @@
       }
     }
 
+; sub make_shortcut
+    { my ($self, $target, $func) = @_
+    ; my $tag   = lc($self->name)
+    ; my $class = $self->get_class_name
+    ; install Package::Subroutine:: $target, $func
+        , sub { $class->new( @_ ) }
+    }
+
 ; 1
 
 __END__
 
+=head1 NAME
 
-; sub make_subclass
-  { my %args = @_
-  ; $args{'of'}   ||= [ "".caller(1) ]
-  ; $args{'name'} || Carp::croak('no name')
-  ; unless( defined $args{'in'} )
-      { $args{'in'} = $args{'of'}->[0]
-      }
-  ; unless($args{'code'})
-      { if(ref $args{'codegen'})
-          {
-            $args{'code'} = $args{'codegen'}->(%args)
-          }
-        else
-          { $args{'code'} = "$args{'codegen'}"
-          }
-      }
-  # optional shortcut_in
-  ; my $code = 'package '.$args{'in'}.'::'.$args{'name'}.';'
-             . 'our @ISA = qw/'.join(' ',@{$args{'of'}}).'/;' . $args{'code'}
-  ; if($args{'shortcut_in'})
-      { my $sc = $args{'shortcut'} || $args{'name'}
-      ; $code .= 'package '.$args{'shortcut_in'}.';'
-           . 'sub '.$sc.' { new '.$args{'in'}.'::'.$args{'name'}.'::(@_) }'
-      }
-  ; eval $code
-  ; Carp::croak($@) if $@
-  }
+HO::ClassBuilder
+
+=head1 SYNOPSIS
+
+   use HO::ClassBuilder;
+
+   my $builder = HO::ClassBuilder->new
+        ( name => 'Img'
+        , namespace => ['HO','HTML','Element']
+        , version => $VERSION
+        , parents => [ 'HO::HTML::Element' ]
+        , methods =>
+            { init => sub { ... }
+            }
+        );
+   $builder->build;
+   $builder->make_shortcut(__PACKAGE__, $elements[$p]->[1]);
+
+=head1 DESCRIPTION
+
