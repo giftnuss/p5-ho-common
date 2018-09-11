@@ -43,10 +43,8 @@ my $another_object = bless \my $stg,'class::ok';
     ; *get = \&HO::Structure::string
     };
 
-    sub new
-        { my ($package,@p)=@_
-        ; my $self=$package->SUPER::new()
-
+    sub init
+        { my ($self,@p) = @_
         ; my ($HW,$hello,$world)=new HO::Object::()->copy(3)
 
         ; my $area=$self->area_setter()

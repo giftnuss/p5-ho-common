@@ -1,0 +1,54 @@
+{
+   "abstract" : "hierachical (array based) objects",
+   "author" : [
+      "Mike WÃ¼rfel <sknpp@cpan.org>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.4224",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "HO-common",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Package::Subroutine" : "0",
+            "Test::Exception" : "0",
+            "Test::More" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.42"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Class::Data::Localize" : "0.0401",
+            "HO::class" : "0.076",
+            "parent" : "0",
+            "perl" : "5.008"
+         }
+      }
+   },
+   "provides" : {
+      "HO::ClassBuilder" : {
+         "file" : "lib/HO/ClassBuilder.pm",
+         "version" : "0.001"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "homepage" : "http://github.com/giftnuss/p5-ho-common/tree/master",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/giftnuss/p5-ho-common.git"
+      }
+   },
+   "version" : "0.68",
+   "x_serialization_backend" : "JSON::PP version 2.97001"
+}

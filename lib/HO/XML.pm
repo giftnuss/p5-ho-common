@@ -3,7 +3,11 @@
 ; our $VERSION='0.03'
 # *******************
 ; use strict; use warnings
-; use parent qw(HO::Tag HO::mixin::insertpoint)
+
+; use HO::mixin 'HO::mixin::insertpoint'
+; use HO::mixin 'HO::mixin::attributes'
+
+; use parent qw(HO::Tag)
 
 # Am besten wäre es eine Möglichkeit zu haben den default code einer Methode
 # ebenfalls noch ändern zu können.

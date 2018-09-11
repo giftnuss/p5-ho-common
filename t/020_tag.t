@@ -2,7 +2,7 @@
 
 # t/020_tag.t - check module loading and the simple api
 
-; use Test::More tests => 9
+; use Test::More tests => 10
 
 ; BEGIN { use_ok('HO::Tag') }
 
@@ -25,7 +25,9 @@
 
 ; $b->replace("cb")
 ; is("$b","<a>cb</a>","content was replaced")
-;
+
+; ok(!$b->can("AUTOLOAD"),'without AUTOLOAD')
+
 ; ; END
     { if(0)
         { require Module::Versions::Report

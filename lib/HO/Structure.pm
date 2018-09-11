@@ -6,6 +6,10 @@
 
 ; use Carp ()
 
+; use subs 'init'
+
+; use HO::abstract 'class'
+
 ; use HO::class
     _lvalue => _areas => '%',
     _lvalue => _root  => '$'
@@ -126,8 +130,8 @@ HO::structure - something like an object template
 
    __PACKAGE__->auto_slots;
 
-   sub new {
-       my $self = shift()->SUPER::new;
+   sub init {
+       my $self = shift;
        my $a = $self->area_setter;
 
        my @m = new HO()->copy(3);
@@ -145,9 +149,3 @@ HO::structure - something like an object template
 =head1 DESCRIPTION
 
 =cut
-
-=head2 NOTES
-
-Bei Vererbung kann der Constraint in Zeile 48 nervig werden.
-
-#ERwähnung sollte finden das diese Klasse keine init Methode hat.

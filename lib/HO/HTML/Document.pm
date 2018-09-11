@@ -12,8 +12,8 @@
 
 ; __PACKAGE__->make_slots( qw(head title body meta style script) )
 
-; sub new
-    { my ($class)=shift
+; sub init
+    { my $self = shift
     ; my %p=@_
     ; my $doctype   = _doctype($p{'doctype'} || 'transitional')
     ; my $titletext = $p{'title'} || ''
@@ -38,11 +38,10 @@
                                       << $slot{script})
                       << $slot{body}) << newline()
 
-    ; my $self=$class->SUPER::new()
-
     ; $self->set_root($root)
     ; while( my ($slot,$area)=each(%slot) )
-        { $self->set_area($slot,$area) }
+        { $self->set_area($slot,$area)
+        }
 
     ; $self
     }

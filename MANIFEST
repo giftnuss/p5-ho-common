@@ -62,3 +62,4 @@ xt/meta.t
 xt/minimumversion.t
 xt/pod.t
 xt/podcoverage.t
+META.json

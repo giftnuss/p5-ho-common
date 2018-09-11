@@ -206,7 +206,7 @@
     ; my $p = $idx+1
 
     ; my $builder = HO::ClassBuilder->new
-        ( name => $elements[$idx]
+        ( name => ucfirst($elements[$idx])
         , namespace => ['HO','HTML','Element']
         , version => $VERSION
         , parents => [ $baseclasses[ $elements[$p]->[2] ] ]
@@ -227,6 +227,7 @@
           { my ($self,@args) = @_
           ; $self->_is_single_tag = $single
           ; $self->insert($name,@args)
+          ; $self
           }
         }
     , # heading init
@@ -238,6 +239,7 @@
           ; $self->insert($name, @args)
           ; my $level = $self->default_level
           ; $self->level($level)
+          ; $self
           }
         }
     )

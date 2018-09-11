@@ -1,10 +1,7 @@
   package HO::mixin::insertpoint
-#*******************************
-; use HO::accessor ()
-; our $VERSION=0.04
-#**************************
-
-; use Package::Subroutine
+# ******************************
+; our $VERSION=0.05
+# *****************
 
 ; sub insertpoint
     { my ($self,$insertpoint) = @_
@@ -28,6 +25,17 @@ HO::insertpoint - mixin with an alternative insert object method
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
+
+This mixin uses the ability to change an method on a per object base.
+
+This mixin contains one new method.
+
+=over 4
+
+=item insertpoint
+
+This method gets one object which will be used for all following calls
+of C<insert> as point, where the arguments will be inserted.
 
 
 

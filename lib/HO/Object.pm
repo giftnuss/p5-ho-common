@@ -15,7 +15,7 @@
     _method   => insert   => sub
        { my $self = shift
        ; push @{$self->_thread},
-            map { (ref eq 'ARRAY') ? new HO::Object::(@$_) : $_ } @_
+            map { (ref eq 'ARRAY') ? (@$_) : $_ } @_
        ; $self
        },
 
@@ -23,19 +23,6 @@
        { my $self = shift
        ; return join("",$self->content)
        }
-
-; use overload
-    '<<'     => "insert",
-    '**'     => "insert",
-    '""'     => "string",
-    '+'      => "concat",
-    '*'      => "copy",
-    'bool'   => sub{ 1 },
-    fallback => 1,
-    nomethod => sub
-        { require Carp
-        ; Carp::croak "illegal operator $_[3]."
-        }
 
 ; sub init
     { return shift->insert( @_ )
@@ -62,7 +49,7 @@
 ; sub concat
     { my ($o1,$o2,$reverse)=@_
     ; ($o2,$o1)=($o1,$o2) if $reverse
-    ; return new HO::Object($o1,$o2)
+    ; return new HO::Object::($o1,$o2)
     }
 
 ; sub copy
@@ -106,6 +93,19 @@
 ; sub count
    { return scalar @{$_[0]->_thread}
    }
+
+; use overload
+    '<<'     => "insert",
+    '**'     => "insert",
+    '""'     => "string",
+    '+'      => "concat",
+    '*'      => "copy",
+    'bool'   => sub{ 1 },
+    fallback => 1,
+    nomethod => sub
+        { require Carp
+        ; Carp::croak "illegal operator $_[3]."
+        }
 
 ; 1 ;
 

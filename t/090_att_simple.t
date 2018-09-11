@@ -3,14 +3,16 @@
 ; use strict
 ; use Test::More tests => 4
 
-; BEGIN 
+; BEGIN
   { use_ok('HO::Object')
-  ; use_ok('HO::mixin::attributes::autoload') 
+  ; use_ok('HO::mixin::attributes')
   }
-        
+
 ; package HOx::RT
 
-; use parent qw/HO::Object HO::mixin::attributes::autoload/
+; use HO::mixin qw/HO::mixin::attributes/
+
+; use parent qw/HO::Object/
 
 ; use HO::class
 

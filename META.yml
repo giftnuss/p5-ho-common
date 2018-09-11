@@ -1,15 +1,31 @@
 ---
-name: HO
-version: 0.61
+abstract: 'hierachical (array based) objects'
 author:
-  - 'Sebastian Knapp <sk@computer-leipzig.com>'
-abstract: "hierachical (array based) objects"
+  - 'Mike WÃ¼rfel <sknpp@cpan.org>'
+build_requires:
+  Package::Subroutine: '0'
+  Test::Exception: '0'
+  Test::More: '0'
+configure_requires:
+  Module::Build: '0.42'
+dynamic_config: 1
+generated_by: 'Module::Build version 0.4224, CPAN::Meta::Converter version 2.150010'
 license: perl
-requires:
-  perl: 5.006
-generated_by: Module::Build version 0.2808
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: HO-common
+provides:
+  HO::ClassBuilder:
+    file: lib/HO/ClassBuilder.pm
+    version: '0.001'
+requires:
+  Class::Data::Localize: '0.0401'
+  HO::class: '0.076'
+  parent: '0'
+  perl: '5.008'
 resources:
-  license: http://dev.perl.org/licenses/
+  homepage: http://github.com/giftnuss/p5-ho-common/tree/master
+  repository: git://github.com/giftnuss/p5-ho-common.git
+version: '0.68'
+x_serialization_backend: 'CPAN::Meta::YAML version 0.018'

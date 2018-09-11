@@ -4,8 +4,8 @@ use Module::Build;
 
 Module::Build->new
     ( module_name     => 'HO::common',
-      dist_version    => '0.64',
-      dist_author     => 'Sebastian Knapp <sknpp@cpan.org>',
+      dist_version    => '0.68',
+      dist_author     => 'Mike Würfel <sknpp@cpan.org>',
       license         => 'perl',
       create_makefile_pl => 'traditional',
       dist_abstract   => 'hierachical (array based) objects',
@@ -13,6 +13,7 @@ Module::Build->new
           { perl => 5.008
           , 'HO::class' => 0.076
           , parent => 0
+          , 'Class::Data::Localize' => 0.0401
           },
       configure_requires => {
           'Module::Build' => 0.42

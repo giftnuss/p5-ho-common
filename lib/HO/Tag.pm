@@ -4,10 +4,9 @@
 # *******************
 ; use strict; use warnings
 
-; use parent qw/
-    HO::Object
-    HO::mixin::attributes::autoload
-  /
+; use HO::mixin 'HO::mixin::attributes', without => [qw/AUTOLOAD/]
+
+; use parent qw/HO::Object/
 
 ; use HO::class
     _method => string => sub

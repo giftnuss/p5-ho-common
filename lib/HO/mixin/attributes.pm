@@ -1,8 +1,11 @@
   package HO::mixin::attributes
 # *****************************
 ; our $VERSION=0.062
-# *************************
+# ******************
 ; use strict
+; use Data::Dumper
+
+; our ($AUTOLOAD)
 
 ; use HO::class
     _lvalue => _attributes => '%'
@@ -57,6 +60,28 @@
     { my ($self,$key,$value) = @_
     ; return defined($value) ? sprintf(" %s=\"%s\"",$key,$value)
                              : sprintf(" %s",$key)
+    }
+
+; DEFDEBUG:
+  { no strict 'refs'
+  ; unless( *{__PACKAGE__ . "::DEBUG_AUTOLOAD"}{'CODE'} )
+      { sub DEBUG_AUTOLOAD () { 0 }
+      }
+  }
+
+; sub AUTOLOAD : lvalue
+    { my $self=shift
+    ; Carp::croak "AUTOLOAD ($AUTOLOAD) called without object."
+        unless ref $self
+    ; Carp::carp "AUTOLOAD: ".$AUTOLOAD if DEBUG_AUTOLOAD
+    ; $AUTOLOAD =~ s/.*:://
+    ; my @arg=@_ #; warn $AUTOLOAD
+    ; if( @arg )
+        { $self->set_attribute($AUTOLOAD, @arg)
+        ; return $self
+        }
+    # don't say return, it is a lvalue sub
+    ; $self->get_attribute($AUTOLOAD)
     }
 
 ; 1

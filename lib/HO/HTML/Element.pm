@@ -3,11 +3,11 @@
 ; our $VERSION='0.01'
 # *******************
 
-; use parent ( 'HO::Tag'
-             , 'HO::mixin::insertpoint'
-             , 'HO::HTML::attribute'
-             , 'HO::mixin::attributes::autoload'
-             )
+; use HO::mixin 'HO::mixin::insertpoint'
+; use HO::mixin 'HO::HTML::attribute'
+; use HO::mixin 'HO::mixin::attributes'
+
+; use parent ( 'HO::Tag' )
 
 ; use HO::class
     _lvalue => _is_single_tag => '$'

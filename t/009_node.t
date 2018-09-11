@@ -1,5 +1,5 @@
 ; use strict; use warnings
-; use Test::More tests => 4
+; use Test::More tests => 3
 
 ; BEGIN { use_ok('HO::Node') }
 
@@ -8,4 +8,4 @@
 
 ; is("$node","")
 
-; ok($node->can("insertpoint"))
+
